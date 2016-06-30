@@ -92,7 +92,7 @@ public class Main extends JavaPlugin implements Listener {
 		return p;
 	}
 	
-	public static Player getPlayerFromSCB(SCBPlayer p) {
+	public Player getPlayerFromSCB(SCBPlayer p) {
 		return p.getPlayer();
 	}
 	
@@ -304,5 +304,5 @@ public class Main extends JavaPlugin implements Listener {
 		e.setCancelled(true);
 	}
 
-	public static String tacc(char c, String msg){return ChatColor.translateAlternateColorCodes(c,msg);}
+	public String tacc(char c, String msg){return ChatColor.translateAlternateColorCodes(c,msg);}
 }
