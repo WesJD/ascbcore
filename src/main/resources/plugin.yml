@@ -1,5 +1,5 @@
 name: ASCBCore
-version: 1.0-ALPHA
+version: ${version}
 description: A-SCB Alpha Core
 authors: [Nivk_, SimonMC, Bailey_]
 main: ascb.nivk.core.Main
