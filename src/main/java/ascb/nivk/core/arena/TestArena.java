@@ -1,7 +1,7 @@
 package ascb.nivk.core.arena;
 
 import ascb.nivk.core.Main;
-import ascb.nivk.core.SCBPlayer;
+import ascb.nivk.core.player.SCBPlayer;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
@@ -70,9 +70,9 @@ public class TestArena extends Arena {
         if(players.size() == 4) {
             int i = 0;
             for(SCBPlayer p : players) {
-                p.getPlayer().teleport(spawnpoints.get(i));
+                player.getPlayer().teleport(spawnpoints.get(i));
                 i++;
-                p.getPlayer().sendMessage("start");
+                player.getPlayer().sendMessage("start");
             }
         }
     }
@@ -82,7 +82,7 @@ public class TestArena extends Arena {
         players.remove(player);
         lives.remove(player);
         player.setLives(5);
-        player.getPlayer().teleport(main.lobbySpawn);
+        player.getPlayer().teleport(Main.get().getLobbySpawn());
         checkWinner();
         player.setInGame(false);
     }
@@ -100,11 +100,11 @@ public class TestArena extends Arena {
         player.getPlayer().teleport(spawnpoints.get(random.nextInt(spawnpoints.size())));
         for(SCBPlayer p : players) {
             if(attacker != null) {
-                player.getPlayer().sendMessage(p.getPlayer().getName() + " ded by " + p.getPlayer().getName());
+                p.getPlayer().sendMessage(Bukkit.getPlayer(player.getUuid()).getName() + " ded by " + Bukkit.getPlayer(attacker.getUuid()).getName());
             } else {
                 p.getPlayer().sendMessage("he ded from null");
             }
-           p.getPlayer().sendMessage("he has " + player.getLives() + " lives left!!");
+            p.getPlayer().sendMessage("he has " + player.getLives() + " lives left!!");
         }
         checkWinner();
     }
@@ -115,7 +115,7 @@ public class TestArena extends Arena {
             winner.sendMessage("you win");
             for(SCBPlayer p : players) {
                 Player p2 = p.getPlayer();
-                p2.teleport(main.lobbySpawn);
+                p2.teleport(Main.get().getLobbySpawn());
                 players.remove(p);
                 lives.clear();
                 ingamePlayers.clear();
