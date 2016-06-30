@@ -1,0 +1,29 @@
+name: ASCBCore
+version: 1.0-ALPHA
+description: A-SCB Alpha Core
+authors: [Nivk_, SimonMC, Bailey_]
+main: ascb.nivk.core.Main
+depend: [ProtocolLib, NametagEdit, Vault]
+commands:
+  ascb:
+    description: The ASCB Project Core
+    permission: ascb.ascb
+    permission-message: &c You don't have enough permissions to run this command! Contact one of our Admins if you believe this is an error.
+  giverank:
+    description: Give rank to a player
+  pinfo:
+    permission: ascb.pinfo
+  contributors:
+    description: People who helped
+  ban:
+    description: Ban people
+    aliases: [aban, ascbban, scbban, pban]
+  kick:
+    description: Kick people
+    aliases: [akick, ascbkick, scbkick, pkick]
+  default:
+    description: Default a player
+    permission: ascb.default
+    permission-message: &c You don't have enough permissions to run this command! Contact one of our Admins if you believe this is an error.
+  recalculate:
+    description: Recalculate a player
