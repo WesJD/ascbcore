@@ -20,7 +20,6 @@ import ascb.nivk.core.Main;
 import ascb.nivk.core.player.SCBPlayer;
 
 public class DoubleJump implements Listener {
-
 	private final long COOLDOWN_TIME = 1200;
 
 	private final Main main;
@@ -55,12 +54,18 @@ public class DoubleJump implements Listener {
 	public void onPlayerMove(PlayerMoveEvent e) {
 		Player p = e.getPlayer();
 		Location loc = p.getLocation();
+        if(disallowed.containsKey(p) && (System.currentTimeMillis() - disallowed.get(p)) >= COOLDOWN_TIME && loc.subtract(0, 1, 0).getBlock().getType() != Material.AIR) {
+            disallowed.remove(p);
+        }
 		if (!disallowed.containsKey(p)) {
 			if (p.getGameMode() != GameMode.CREATIVE && loc.subtract(0, 1, 0).getBlock().getType() != Material.AIR
 					&& !p.isFlying()) {
 				p.setAllowFlight(true);
 			}
-		}
+		} else {
+            p.setFlying(false);
+            p.setAllowFlight(false);
+        }
 	}
 
 	@EventHandler

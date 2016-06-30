@@ -59,9 +59,13 @@ public class TestArena extends Arena {
 
     @Override
     public void onPlayerJoin(SCBPlayer player) {
+        if(player.isInGame() || player.currentArena != null) {
+            player.getPlayer().sendMessage(Main.tacc('&', "&cYou are already playing"));
+            return;
+        }
         if(players.contains(player)) {
             player.getPlayer().teleport(lobbyLocation);
-            player.getPlayer().sendMessage("you already in");
+            player.getPlayer().sendMessage(Main.tacc('&', "&cYou are already in this arena."));
             return;
         }
         players.add(player);
@@ -76,7 +80,7 @@ public class TestArena extends Arena {
             for(SCBPlayer p : players) {
                 player.getPlayer().teleport(spawnpoints.get(i));
                 i++;
-                player.getPlayer().sendMessage("start");
+                player.getPlayer().sendMessage(Main.tacc('&', "&aThe game is &ostarting"));
             }
         }
         giveClass(player);
@@ -90,15 +94,16 @@ public class TestArena extends Arena {
         player.getPlayer().teleport(Main.get().getLobbySpawn());
         checkWinner();
         player.setInGame(false);
+        player.currentArena = null;
         clearInventory(player);
     }
 
     @Override
     public void onPlayerDeath(SCBPlayer player, SCBPlayer attacker) {
-        player.getPlayer().sendMessage("you ded " + ingamePlayers.toString());
+        player.getPlayer().sendMessage(Main.tacc('&', "&cYou died."));
         player.setLives(player.getLives() - 1);
         if(player.getLives() <= 0) {
-            player.getPlayer().sendMessage("ur out");
+            player.getPlayer().sendMessage(Main.tacc('&', "&cYou have been &oeliminated"));
             player.getPlayer().teleport(lobbyLocation);
             ingamePlayers.remove(player);
             clearInventory(player);
@@ -107,11 +112,11 @@ public class TestArena extends Arena {
         player.getPlayer().teleport(spawnpoints.get(random.nextInt(spawnpoints.size())));
         for(SCBPlayer p : players) {
             if(attacker != null) {
-                p.getPlayer().sendMessage(Bukkit.getPlayer(player.getUuid()).getName() + " ded by " + Bukkit.getPlayer(attacker.getUuid()).getName());
+                p.getPlayer().sendMessage(Main.tacc('&', Bukkit.getPlayer(player.getUuid()).getName() + " &cwas killed by " + Bukkit.getPlayer(attacker.getUuid()).getName()));
             } else {
-                p.getPlayer().sendMessage("he ded from null");
+                p.getPlayer().sendMessage(Main.tacc('&', p.getPlayer().getPlayer() + " &cdied"));
             }
-            p.getPlayer().sendMessage("he has " + player.getLives() + " lives left!!");
+            p.getPlayer().sendMessage(Main.tacc('&', "&cThey have &a" + player.getLives() + " &clives left"));
         }
         clearInventory(player);
         giveClass(player);
@@ -121,13 +126,15 @@ public class TestArena extends Arena {
     public void checkWinner() {
         if(ingamePlayers.size() == 1) {
             Player winner = ingamePlayers.get(0).getPlayer();
-            winner.sendMessage("you win");
+            winner.sendMessage(Main.tacc('&', "&aYou won!"));
             for(SCBPlayer p : players) {
                 Player p2 = p.getPlayer();
                 p2.teleport(Main.get().getLobbySpawn());
                 lives.clear();
                 ingamePlayers.clear();
                 clearInventory(p);
+                p.currentArena = null;
+                p.setInGame(false);
             }
             players.clear();
         }

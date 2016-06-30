@@ -1,7 +1,7 @@
 name: ASCBCore
 version: ${version}
-description: A-SCB Alpha Core
-authors: [Nivk_, SimonMC, Bailey_]
+description: A-SCB Core
+authors: [Nivk_, SimonMC, Bailey_, WesJD]
 main: ascb.nivk.core.Main
 depend: [ProtocolLib, NametagEdit, Vault]
 commands:
