@@ -1,10 +1,14 @@
 package ascb.nivk.core.arena;
 
 import ascb.nivk.core.Main;
+import ascb.nivk.core.PlayerClass;
 import ascb.nivk.core.player.SCBPlayer;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.potion.PotionEffect;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -75,6 +79,7 @@ public class TestArena extends Arena {
                 player.getPlayer().sendMessage("start");
             }
         }
+        giveClass(player);
     }
 
     @Override
@@ -85,6 +90,7 @@ public class TestArena extends Arena {
         player.getPlayer().teleport(Main.get().getLobbySpawn());
         checkWinner();
         player.setInGame(false);
+        clearInventory(player);
     }
 
     @Override
@@ -95,6 +101,7 @@ public class TestArena extends Arena {
             player.getPlayer().sendMessage("ur out");
             player.getPlayer().teleport(lobbyLocation);
             ingamePlayers.remove(player);
+            clearInventory(player);
             return;
         }
         player.getPlayer().teleport(spawnpoints.get(random.nextInt(spawnpoints.size())));
@@ -106,6 +113,8 @@ public class TestArena extends Arena {
             }
             p.getPlayer().sendMessage("he has " + player.getLives() + " lives left!!");
         }
+        clearInventory(player);
+        giveClass(player);
         checkWinner();
     }
 
@@ -116,10 +125,37 @@ public class TestArena extends Arena {
             for(SCBPlayer p : players) {
                 Player p2 = p.getPlayer();
                 p2.teleport(Main.get().getLobbySpawn());
-                players.remove(p);
                 lives.clear();
                 ingamePlayers.clear();
+                clearInventory(p);
             }
+            players.clear();
         }
+    }
+
+    private void clearInventory(SCBPlayer player) {
+        player.getPlayer().getInventory().clear();
+        player.getPlayer().getInventory().setHelmet(new ItemStack(Material.AIR));
+        player.getPlayer().getInventory().setChestplate(new ItemStack(Material.AIR));
+        player.getPlayer().getInventory().setLeggings(new ItemStack(Material.AIR));
+        player.getPlayer().getInventory().setBoots(new ItemStack(Material.AIR));
+        for(PotionEffect eff : player.getPlayer().getActivePotionEffects())
+            player.getPlayer().removePotionEffect(eff.getType());
+    }
+
+    public void giveClass(SCBPlayer player) {
+        PlayerClass playerClass = player.getPlayerClass();
+        List<ItemStack> items = playerClass.getItems();
+        for(ItemStack item : items) {
+            Player p = player.getPlayer();
+            p.getInventory().addItem(item);
+        }
+        List<PotionEffect> effects = playerClass.potionEffects();
+        Player p = player.getPlayer();
+        p.addPotionEffects(effects);
+        p.getInventory().setHelmet(playerClass.getHelmet());
+        p.getInventory().setChestplate(playerClass.getChestplate());
+        p.getInventory().setLeggings(playerClass.getLeggings());
+        p.getInventory().setBoots(playerClass.getBoots());
     }
 }
