@@ -1,6 +1,6 @@
 package ascb.nivk.core.arena;
 
-import ascb.nivk.core.SCBPlayer;
+import ascb.nivk.core.player.SCBPlayer;
 import org.bukkit.Location;
 
 import java.util.List;
