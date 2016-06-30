@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import ascb.nivk.core.arena.TestArena;
 import net.milkbowl.vault.permission.Permission;
 import org.bukkit.BanList.Type;
 import org.bukkit.Bukkit;
@@ -18,6 +19,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
@@ -43,11 +45,13 @@ public class Main extends JavaPlugin implements Listener {
 	public static Permission perms = null;
 	
 	BukkitTask announcer;
+
+	private TestArena testarena;
 	
 	@EventHandler
 	public void onPlayerJoin(PlayerJoinEvent e) {
 		Player p = e.getPlayer();
-		SCBPlayer scbp = new SCBPlayer(p.getUniqueId());
+		SCBPlayer scbp = new SCBPlayer(p.getUniqueId(), e.getPlayer());
 		players.add(scbp);
 		p.setGameMode(GameMode.ADVENTURE);
 		p.setHealth(20);
@@ -70,6 +74,7 @@ public class Main extends JavaPlugin implements Listener {
 		Player p = e.getPlayer();
 		for(SCBPlayer p2 : players) {
 			if(p.getUniqueId().equals(p2.getUuid())) {
+				p2.currentArena.onPlayerLeave(p2);
 				players.remove(p2);
 				getServer().getLogger().info("SCB Player left! UUID: " + p2.getUuid() + " Array Size: " + players.size());
 				break;
@@ -88,7 +93,7 @@ public class Main extends JavaPlugin implements Listener {
 	}
 	
 	public static Player getPlayerFromSCB(SCBPlayer p) {
-		return Bukkit.getPlayer(p.getUuid());
+		return p.getPlayer();
 	}
 	
 	@Override
@@ -115,6 +120,7 @@ public class Main extends JavaPlugin implements Listener {
 				sender.sendMessage("INVALID!");
 				return true;
 			}
+			testarena.onPlayerJoin(p);
 			sender.sendMessage("UUID: " + p.getUuid() + " Class: " + p.getPlayerClass().getName() + " Is In Game: " + p.isInGame() + " Rank: " + p.getRank().getName());
 		}
 
@@ -253,22 +259,22 @@ public class Main extends JavaPlugin implements Listener {
 		lobbySpawn.setPitch(Float.parseFloat(lobbySpawnParts[3].replaceAll("x","")));
 		lobbySpawn.setYaw(Float.parseFloat(lobbySpawnParts[4].replaceAll("x","")));
 		setupPermissions();
+		testarena = new TestArena();
 		sender.sendMessage(ChatColor.translateAlternateColorCodes('&', "&6The ASCB Project >> &aEnabled"));
 	}
 
 	@EventHandler
-	public void onPlayerDeath(EntityDamageByEntityEvent e) {
+	public void onPlayerDeath(EntityDamageEvent e) {
 		if(e.getEntity() instanceof Player) {
-			if(e.getDamager() instanceof Player) {
 				double damage = e.getDamage();
 				if(((Player) e.getEntity()).getHealth() - damage <= 0) {
+					e.setCancelled(true);
 					SCBPlayer victim = getPlayerByUUID(e.getEntity().getUniqueId());
-					SCBPlayer attacker = getPlayerByUUID(e.getDamager().getUniqueId());
 					if (victim.isInGame() && victim.currentArena != null) {
-						victim.currentArena.onPlayerDeath(victim, attacker);
+						victim.currentArena.onPlayerDeath(victim, null);
 					}
+					((Player) e.getEntity()).setHealth(20);
 				}
-			}
 		}
 	}
 	

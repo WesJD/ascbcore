@@ -4,6 +4,7 @@ import java.util.UUID;
 
 import ascb.nivk.core.arena.Arena;
 import com.nametagedit.plugin.NametagEdit;
+import javafx.application.Platform;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
@@ -17,12 +18,12 @@ public class SCBPlayer {
 	public Arena currentArena = null;
 	
 	private Ranks rank = Ranks.DEFAULT;
+	private Player player;
 	
-	public SCBPlayer(UUID id) {
+	public SCBPlayer(UUID id, Player p) {
 		this.uuid = id;
 		this.playerClass = new ClassRandom();
 		this.lives = 4;
-		Player p = Main.getPlayerFromSCB(this);
 		if(p.hasPermission("ascb.vip")) {
 			this.rank = Ranks.VIP;
 		} else if(p.hasPermission("ascb.gm")) {
@@ -32,6 +33,7 @@ public class SCBPlayer {
 		} else {
 			this.rank = Ranks.DEFAULT;
 		}
+		this.player = p;
 	}
 
 	public void recalculate() {
@@ -82,4 +84,6 @@ public class SCBPlayer {
 	public void setInGame(boolean inGame) {
 		this.inGame = inGame;
 	}
+
+	public Player getPlayer() {return player;}
 }

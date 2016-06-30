@@ -14,7 +14,7 @@ public abstract class Arena {
     public abstract List<Location> getSpawnpoints();
     public abstract Location getLobbyLocation();
 
-    public abstract void onPlayerJoin();
-    public abstract void onPlayerLeave();
+    public abstract void onPlayerJoin(SCBPlayer player);
+    public abstract void onPlayerLeave(SCBPlayer player);
     public abstract void onPlayerDeath(SCBPlayer player, SCBPlayer attacker);
 }
