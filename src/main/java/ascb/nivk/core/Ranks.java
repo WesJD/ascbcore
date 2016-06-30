@@ -1,16 +1,18 @@
 package ascb.nivk.core;
 
 public enum Ranks {
-	DEFAULT("DEFAULT", "&7", 0), VIP("VIP", "&f[&6VIP&f]&7", 1), GM("GM", "&f[&bGM&f]&f", 2), OP("OP", "&f[&cOp&f]&f", 3);
+
+	DEFAULT("DEFAULT", "&7"),
+	VIP("VIP", "&f[&6VIP&f]&7"),
+	GM("GM", "&f[&bGM&f]&f"),
+	OP("OP", "&f[&cOp&f]&f");
 	
 	private final String name;
 	private final String prefix;
-	private final int level;
 
-	Ranks(String name, String prefix, int level) {
+	Ranks(String name, String prefix) {
 		this.name = name;
 		this.prefix = prefix;
-		this.level = level;
 	}
 	
 	public String getName() {
@@ -19,5 +21,7 @@ public enum Ranks {
 	public String getPrefix() {
 		return prefix;
 	}
-	public int getLevel() { return level; }
+	public int getLevel() {
+		return ordinal();
+	}
 }

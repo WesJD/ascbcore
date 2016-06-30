@@ -4,11 +4,9 @@ import java.util.UUID;
 
 import ascb.nivk.core.arena.Arena;
 import com.nametagedit.plugin.NametagEdit;
-import javafx.application.Platform;
 import org.bukkit.ChatColor;
-import org.bukkit.entity.Player;
-
 import ascb.nivk.core.classes.ClassRandom;
+import org.bukkit.entity.Player;
 
 public class SCBPlayer {
 	private UUID uuid;

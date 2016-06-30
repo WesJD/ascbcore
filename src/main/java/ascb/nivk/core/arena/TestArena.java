@@ -2,7 +2,6 @@ package ascb.nivk.core.arena;
 
 import ascb.nivk.core.Main;
 import ascb.nivk.core.SCBPlayer;
-import com.comphenix.protocol.PacketType;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
