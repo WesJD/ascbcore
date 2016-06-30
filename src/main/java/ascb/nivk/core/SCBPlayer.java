@@ -17,8 +17,10 @@ public class SCBPlayer {
 	
 	private Ranks rank = Ranks.DEFAULT;
 	private Player player;
+
+	private Main main;
 	
-	public SCBPlayer(UUID id, Player p) {
+	public SCBPlayer(UUID id, Player p, Main main) {
 		this.uuid = id;
 		this.playerClass = new ClassRandom();
 		this.lives = 4;
@@ -32,6 +34,7 @@ public class SCBPlayer {
 			this.rank = Ranks.DEFAULT;
 		}
 		this.player = p;
+		this.main = main;
 	}
 
 	public void recalculate() {
@@ -46,7 +49,7 @@ public class SCBPlayer {
 		if(p.isOp()) {
 			this.rank = Ranks.OP;
 		}
-		NametagEdit.getApi().setPrefix(p, ChatColor.translateAlternateColorCodes('&', Main.getPlayerByUUID(p.getUniqueId()).getRank().getPrefix() + " "));
+		NametagEdit.getApi().setPrefix(p, ChatColor.translateAlternateColorCodes('&', main.getPlayerByUUID(p.getUniqueId()).getRank().getPrefix() + " "));
 	}
 
 	public Arena getArena() {return this.currentArena;}

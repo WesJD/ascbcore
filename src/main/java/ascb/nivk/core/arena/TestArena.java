@@ -11,9 +11,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
 
-/**
- * Created by Nivk on 2016. 06. 30..
- */
 public class TestArena extends Arena {
     private List<SCBPlayer> players = new ArrayList<SCBPlayer>();
     private HashMap<SCBPlayer, Integer> lives = new HashMap<SCBPlayer, Integer>();
@@ -24,13 +21,16 @@ public class TestArena extends Arena {
 
     private Random random;
 
-    public TestArena() {
+    private Main main;
+
+    public TestArena(Main main) {
         spawnpoints.add(new Location(Bukkit.getWorld("old_lobby"),-1.5,174,311.5));
         spawnpoints.add(new Location(Bukkit.getWorld("old_lobby"),-3.5,174,311.5));
         spawnpoints.add(new Location(Bukkit.getWorld("old_lobby"),-5.5,174,311.5));
         spawnpoints.add(new Location(Bukkit.getWorld("old_lobby"),-7.5,174,311.5));
         lobbyLocation = new Location(Bukkit.getWorld("old_lobby"), -4.5,174,316.5);
         random = new Random();
+        this.main = main;
     }
 
     @Override
@@ -82,7 +82,7 @@ public class TestArena extends Arena {
         players.remove(player);
         lives.remove(player);
         player.setLives(4);
-        Main.getPlayerFromSCB(player).teleport(Main.lobbySpawn);
+        Main.getPlayerFromSCB(player).teleport(main.lobbySpawn);
         checkWinner();
         player.setInGame(false);
     }
@@ -100,22 +100,22 @@ public class TestArena extends Arena {
         Main.getPlayerFromSCB(player).teleport(spawnpoints.get(random.nextInt(spawnpoints.size())));
         for(SCBPlayer p : players) {
             if(attacker != null) {
-                Main.getPlayerFromSCB(p).sendMessage(Bukkit.getPlayer(player.getUuid()).getName() + " ded by " + Bukkit.getPlayer(attacker.getUuid()).getName());
+                Main.getPlayerFromSCB(p).sendMessage(p.getPlayer().getName() + " ded by " + p.getPlayer().getName());
             } else {
                 p.getPlayer().sendMessage("he ded from null");
             }
-            Main.getPlayerFromSCB(p).sendMessage("he has " + player.getLives() + " lives left!!");
+           p.getPlayer().sendMessage("he has " + player.getLives() + " lives left!!");
         }
         checkWinner();
     }
 
     public void checkWinner() {
         if(ingamePlayers.size() == 1) {
-            Player winner = Main.getPlayerFromSCB(ingamePlayers.get(0));
+            Player winner = ingamePlayers.get(0).getPlayer();
             winner.sendMessage("you win");
             for(SCBPlayer p : players) {
                 Player p2 = Main.getPlayerFromSCB(p);
-                p2.teleport(Main.lobbySpawn);
+                p2.teleport(main.lobbySpawn);
                 players.remove(p);
                 lives.clear();
                 ingamePlayers.clear();

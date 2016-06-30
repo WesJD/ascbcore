@@ -52,7 +52,7 @@ public class DoubleJump implements Listener {
 			return;
 
 		ascb.nivk.core.SCBPlayer p2 = null;
-		for (SCBPlayer p3 : Main.players) {
+		for (SCBPlayer p3 : main.players) {
 			if (p3.getUuid().equals(p.getUniqueId())) {
 				p2 = p3;
 			}

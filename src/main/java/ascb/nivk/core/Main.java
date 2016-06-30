@@ -36,12 +36,12 @@ import ascb.nivk.core.messages.OnJoin;
 public class Main extends JavaPlugin implements Listener {
 
 	private ConsoleCommandSender sender = Bukkit.getConsoleSender();
-	public static List<SCBPlayer> players = new ArrayList<SCBPlayer>();
-	public static Location lobbySpawn = new Location(Bukkit.getWorld("old_lobby"),0,50,0);
+	public List<SCBPlayer> players = new ArrayList<SCBPlayer>();
+	public Location lobbySpawn = new Location(Bukkit.getWorld("old_lobby"),0,50,0);
 
 	public FileConfiguration config = getConfig();
 
-	public static Permission perms = null;
+	public Permission perms = null;
 	
 	BukkitTask announcer;
 
@@ -50,7 +50,7 @@ public class Main extends JavaPlugin implements Listener {
 	@EventHandler
 	public void onPlayerJoin(PlayerJoinEvent e) {
 		Player p = e.getPlayer();
-		SCBPlayer scbp = new SCBPlayer(p.getUniqueId(), e.getPlayer());
+		SCBPlayer scbp = new SCBPlayer(p.getUniqueId(), e.getPlayer(), this);
 		players.add(scbp);
 		p.setGameMode(GameMode.ADVENTURE);
 		p.setHealth(20);
@@ -59,7 +59,7 @@ public class Main extends JavaPlugin implements Listener {
 		p.teleport(lobbySpawn);
 		getServer().getLogger().info("Made new SCB Player! UUID: " + players.get(players.size() - 1).getUuid() + " Array Size: " + players.size());
 		scbp.recalculate();
-		NametagEdit.getApi().setPrefix(p, ChatColor.translateAlternateColorCodes('&', Main.getPlayerByUUID(p.getUniqueId()).getRank().getPrefix() + " "));
+		NametagEdit.getApi().setPrefix(p, ChatColor.translateAlternateColorCodes('&', getPlayerByUUID(p.getUniqueId()).getRank().getPrefix() + " "));
 	}
 
 	private boolean setupPermissions() {
@@ -73,7 +73,8 @@ public class Main extends JavaPlugin implements Listener {
 		Player p = e.getPlayer();
 		for(SCBPlayer p2 : players) {
 			if(p.getUniqueId().equals(p2.getUuid())) {
-				p2.currentArena.onPlayerLeave(p2);
+				if(p2.isInGame() || p2.currentArena != null)
+					p2.currentArena.onPlayerLeave(p2);
 				players.remove(p2);
 				getServer().getLogger().info("SCB Player left! UUID: " + p2.getUuid() + " Array Size: " + players.size());
 				break;
@@ -81,7 +82,7 @@ public class Main extends JavaPlugin implements Listener {
 		}
 	}
 	
-	public static SCBPlayer getPlayerByUUID(UUID id) {
+	public SCBPlayer getPlayerByUUID(UUID id) {
 		SCBPlayer p = null;
 		for(SCBPlayer p2 : players) {
 			if(p2.getUuid().equals(id)) {
@@ -258,7 +259,7 @@ public class Main extends JavaPlugin implements Listener {
 		lobbySpawn.setPitch(Float.parseFloat(lobbySpawnParts[3].replaceAll("x","")));
 		lobbySpawn.setYaw(Float.parseFloat(lobbySpawnParts[4].replaceAll("x","")));
 		setupPermissions();
-		testarena = new TestArena();
+		testarena = new TestArena(this);
 		sender.sendMessage(ChatColor.translateAlternateColorCodes('&', "&6The ASCB Project >> &aEnabled"));
 	}
 
