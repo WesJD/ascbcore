@@ -14,7 +14,7 @@ public class SCBPlayer {
 	private PlayerClass playerClass;
 	private int lives = 4;
 	private boolean inGame = false;
-	private Arena currentArena = null;
+	public Arena currentArena = null;
 	
 	private Ranks rank = Ranks.DEFAULT;
 	

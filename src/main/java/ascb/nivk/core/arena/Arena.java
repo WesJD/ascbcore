@@ -16,4 +16,5 @@ public abstract class Arena {
 
     public abstract void onPlayerJoin();
     public abstract void onPlayerLeave();
+    public abstract void onPlayerDeath(SCBPlayer player, SCBPlayer attacker);
 }

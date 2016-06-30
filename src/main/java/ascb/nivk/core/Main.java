@@ -17,6 +17,7 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
@@ -253,6 +254,22 @@ public class Main extends JavaPlugin implements Listener {
 		lobbySpawn.setYaw(Float.parseFloat(lobbySpawnParts[4].replaceAll("x","")));
 		setupPermissions();
 		sender.sendMessage(ChatColor.translateAlternateColorCodes('&', "&6The ASCB Project >> &aEnabled"));
+	}
+
+	@EventHandler
+	public void onPlayerDeath(EntityDamageByEntityEvent e) {
+		if(e.getEntity() instanceof Player) {
+			if(e.getDamager() instanceof Player) {
+				double damage = e.getDamage();
+				if(((Player) e.getEntity()).getHealth() - damage <= 0) {
+					SCBPlayer victim = getPlayerByUUID(e.getEntity().getUniqueId());
+					SCBPlayer attacker = getPlayerByUUID(e.getDamager().getUniqueId());
+					if (victim.isInGame() && victim.currentArena != null) {
+						victim.currentArena.onPlayerDeath(victim, attacker);
+					}
+				}
+			}
+		}
 	}
 	
 	@EventHandler
