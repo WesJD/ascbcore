@@ -57,7 +57,6 @@ public class Main extends JavaPlugin implements Listener {
 		p.setFireTicks(0);
 		p.setFoodLevel(20);
 		p.teleport(lobbySpawn);
-		getServer().getLogger().info("Made new SCB Player! UUID: " + players.get(players.size() - 1).getUuid() + " Array Size: " + players.size());
 		scbp.recalculate();
 		NametagEdit.getApi().setPrefix(p, ChatColor.translateAlternateColorCodes('&', getPlayerByUUID(p.getUniqueId()).getRank().getPrefix() + " "));
 	}
@@ -76,7 +75,6 @@ public class Main extends JavaPlugin implements Listener {
 				if(p2.isInGame() || p2.currentArena != null)
 					p2.currentArena.onPlayerLeave(p2);
 				players.remove(p2);
-				getServer().getLogger().info("SCB Player left! UUID: " + p2.getUuid() + " Array Size: " + players.size());
 				break;
 			}
 		}
@@ -125,7 +123,7 @@ public class Main extends JavaPlugin implements Listener {
 		}
 
 		if(cmd.equalsIgnoreCase("giverank")) {
-			if(args[0] == null ||args[1] == null) {
+			if(args[0] == "" ||args[1] == "") {
 				sender.sendMessage(tacc('&',"&cInvalid arguments"));
 				return true;
 			}
@@ -142,7 +140,7 @@ public class Main extends JavaPlugin implements Listener {
 		}
 
 		if(cmd.equalsIgnoreCase("default")) {
-			if(args[0] == null) {
+			if(args[0] == "") {
 				sender.sendMessage(tacc('&',"&cInvalid arguments"));
 				return true;
 			}
@@ -162,7 +160,7 @@ public class Main extends JavaPlugin implements Listener {
 		}
 
 		if(cmd.equalsIgnoreCase("recalculate")) {
-			if(args[0] == null) {
+			if(args[0] == "") {
 				sender.sendMessage(tacc('&',"&cInvalid arguments"));
 				return true;
 			}
@@ -275,17 +273,6 @@ public class Main extends JavaPlugin implements Listener {
 					}
 					((Player) e.getEntity()).setHealth(20);
 				}
-		}
-	}
-	
-	@EventHandler
-	public void commandPreprocess(PlayerCommandPreprocessEvent e) {
-		if(e.getMessage().equalsIgnoreCase("safestop") || e.getMessage() == "/safestop") {
-			e.setCancelled(true);
-			for(Player p : Bukkit.getOnlinePlayers()) {
-				p.kickPlayer(ChatColor.translateAlternateColorCodes('&', "&e" + e.getPlayer().getName() + " &astopped the server!"));
-			}
-			Bukkit.shutdown();
 		}
 	}
 	
