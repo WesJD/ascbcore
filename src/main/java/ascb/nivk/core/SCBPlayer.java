@@ -2,6 +2,7 @@ package ascb.nivk.core;
 
 import java.util.UUID;
 
+import ascb.nivk.core.arena.Arena;
 import com.nametagedit.plugin.NametagEdit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
@@ -13,6 +14,7 @@ public class SCBPlayer {
 	private PlayerClass playerClass;
 	private int lives = 4;
 	private boolean inGame = false;
+	private Arena currentArena = null;
 	
 	private Ranks rank = Ranks.DEFAULT;
 	
@@ -46,6 +48,8 @@ public class SCBPlayer {
 		}
 		NametagEdit.getApi().setPrefix(p, ChatColor.translateAlternateColorCodes('&', Main.getPlayerByUUID(p.getUniqueId()).getRank().getPrefix() + " "));
 	}
+
+	public Arena getArena() {return this.currentArena;}
 
 	public Ranks getRank() {
 		return rank;
