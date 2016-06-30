@@ -70,9 +70,9 @@ public class TestArena extends Arena {
         if(players.size() == 4) {
             int i = 0;
             for(SCBPlayer p : players) {
-                main.getPlayerFromSCB(p).teleport(spawnpoints.get(i));
+                p.getPlayer().teleport(spawnpoints.get(i));
                 i++;
-                main.getPlayerFromSCB(p).sendMessage("start");
+                p.getPlayer().sendMessage("start");
             }
         }
     }

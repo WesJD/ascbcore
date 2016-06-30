@@ -89,11 +89,7 @@ public class Main extends JavaPlugin implements Listener {
 		}
 		return p;
 	}
-	
-	public Player getPlayerFromSCB(SCBPlayer p) {
-		return p.getPlayer();
-	}
-	
+
 	@Override
 	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
 		String cmd = command.getName();
@@ -224,7 +220,7 @@ public class Main extends JavaPlugin implements Listener {
 	}
 	
 	public void sendChatMessage(SCBPlayer p, String msg) {
-		String name = getPlayerFromSCB(p).getName();
+		String name = p.getPlayer().getName();
 		Ranks rank = p.getRank();
 		
 		if(!p.isInGame()) {

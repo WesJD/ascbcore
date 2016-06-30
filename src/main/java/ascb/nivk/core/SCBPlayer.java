@@ -38,7 +38,7 @@ public class SCBPlayer {
 	}
 
 	public void recalculate() {
-		Player p = Main.getPlayerFromSCB(this);
+		Player p = this.player;
 		this.rank = Ranks.DEFAULT;
 		if(p.hasPermission("ascb.vip")) {
 			this.rank = Ranks.VIP;

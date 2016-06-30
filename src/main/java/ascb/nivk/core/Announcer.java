@@ -6,10 +6,9 @@ import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.ChatColor;
 
 public class Announcer extends BukkitRunnable {
-	private Main main;
-	
+
 	public Announcer(Main m) {
-		this.main = m;
+		Main main = m;
 	}
 	
 	@Override
