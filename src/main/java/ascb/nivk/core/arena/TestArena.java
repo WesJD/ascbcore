@@ -65,14 +65,14 @@ public class TestArena extends Arena {
         lives.put(player, player.getLives());
         ingamePlayers.add(player);
         player.setInGame(true);
-        Main.getPlayerFromSCB(player).teleport(getLobbyLocation());
+        player.getPlayer().teleport(getLobbyLocation());
         player.currentArena = this;
         if(players.size() == 4) {
             int i = 0;
             for(SCBPlayer p : players) {
-                Main.getPlayerFromSCB(p).teleport(spawnpoints.get(i));
+                main.getPlayerFromSCB(p).teleport(spawnpoints.get(i));
                 i++;
-                Main.getPlayerFromSCB(p).sendMessage("start");
+                main.getPlayerFromSCB(p).sendMessage("start");
             }
         }
     }
@@ -82,25 +82,25 @@ public class TestArena extends Arena {
         players.remove(player);
         lives.remove(player);
         player.setLives(4);
-        Main.getPlayerFromSCB(player).teleport(main.lobbySpawn);
+        player.getPlayer().teleport(main.lobbySpawn);
         checkWinner();
         player.setInGame(false);
     }
 
     @Override
     public void onPlayerDeath(SCBPlayer player, SCBPlayer attacker) {
-        Main.getPlayerFromSCB(player).sendMessage("you ded " + ingamePlayers.toString());
+        player.getPlayer().sendMessage("you ded " + ingamePlayers.toString());
         player.setLives(player.getLives() - 1);
         if(player.getLives() <= 0) {
-            Main.getPlayerFromSCB(player).sendMessage("ur out");
-            Main.getPlayerFromSCB(player).teleport(lobbyLocation);
+            player.getPlayer().sendMessage("ur out");
+            player.getPlayer().teleport(lobbyLocation);
             ingamePlayers.remove(player);
             return;
         }
-        Main.getPlayerFromSCB(player).teleport(spawnpoints.get(random.nextInt(spawnpoints.size())));
+        player.getPlayer().teleport(spawnpoints.get(random.nextInt(spawnpoints.size())));
         for(SCBPlayer p : players) {
             if(attacker != null) {
-                Main.getPlayerFromSCB(p).sendMessage(p.getPlayer().getName() + " ded by " + p.getPlayer().getName());
+                player.getPlayer().sendMessage(p.getPlayer().getName() + " ded by " + p.getPlayer().getName());
             } else {
                 p.getPlayer().sendMessage("he ded from null");
             }
@@ -114,7 +114,7 @@ public class TestArena extends Arena {
             Player winner = ingamePlayers.get(0).getPlayer();
             winner.sendMessage("you win");
             for(SCBPlayer p : players) {
-                Player p2 = Main.getPlayerFromSCB(p);
+                Player p2 = p.getPlayer();
                 p2.teleport(main.lobbySpawn);
                 players.remove(p);
                 lives.clear();
