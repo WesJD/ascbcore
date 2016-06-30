@@ -7,6 +7,10 @@
     <artifactId>ASCBCore</artifactId>
     <version>0.0.1-SNAPSHOT</version>
 
+    <properties>
+        <version>${project.version}</version>
+    </properties>
+
     <repositories>
        <repository>
             <id>spigot-repo</id>
