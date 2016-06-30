@@ -61,7 +61,7 @@ public class TestArena extends Arena {
             return;
         }
         players.add(player);
-        player.setLives(4);
+        player.setLives(5);
         lives.put(player, player.getLives());
         ingamePlayers.add(player);
         player.setInGame(true);
@@ -81,7 +81,7 @@ public class TestArena extends Arena {
     public void onPlayerLeave(SCBPlayer player) {
         players.remove(player);
         lives.remove(player);
-        player.setLives(4);
+        player.setLives(5);
         player.getPlayer().teleport(main.lobbySpawn);
         checkWinner();
         player.setInGame(false);

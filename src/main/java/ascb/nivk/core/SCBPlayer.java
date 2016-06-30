@@ -11,7 +11,7 @@ import org.bukkit.entity.Player;
 public class SCBPlayer {
 	private UUID uuid;
 	private PlayerClass playerClass;
-	private int lives = 4;
+	private int lives = 5;
 	private boolean inGame = false;
 	public Arena currentArena = null;
 	
