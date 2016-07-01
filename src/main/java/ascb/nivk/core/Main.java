@@ -2,6 +2,7 @@ package ascb.nivk.core;
 
 import java.util.logging.Level;
 
+import ascb.nivk.core.arena.Arena;
 import ascb.nivk.core.arena.TestArena;
 import ascb.nivk.core.classes.ClassRandom;
 import ascb.nivk.core.classes.ClassZombie;
@@ -19,6 +20,7 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
@@ -110,10 +112,8 @@ public class Main extends JavaPlugin implements Listener {
     public void onPlayerLeave(PlayerQuitEvent e) {
         final Player player = e.getPlayer();
         final SCBPlayer scbPlayer = playerManager.getPlayer(player);
-        scbPlayer.currentArena.onPlayerLeave(scbPlayer);
+        Arena.onPlayerLeave(scbPlayer);
         playerManager.removePlayer(player);
-
-        //getServer().getLogger().info("SCB Player left! UUID: " + p2.getUuid() + " Array Size: " + players.size());
     }
 
     @Override
@@ -123,6 +123,8 @@ public class Main extends JavaPlugin implements Listener {
             if (args.length == 0) {
                 sender.sendMessage(ChatColor.translateAlternateColorCodes('&', "&6The ASCB Project >> &cThis server is running ASCBCore " + this.getDescription().getVersion() + " &6made by&c " + this.getDescription().getAuthors()));
                 return true;
+            } else {
+                Arena.onPlayerJoin(playerManager.getPlayer((Player)sender), new TestArena(this));
             }
         }
 
@@ -248,15 +250,35 @@ public class Main extends JavaPlugin implements Listener {
 
     @EventHandler
     public void onPlayerDeath(EntityDamageEvent e) {
-        if (e.getEntity() instanceof Player) {
+        if (e.getEntity() instanceof Player && e.getCause() != EntityDamageEvent.DamageCause.ENTITY_ATTACK) {
             final Player player = (Player) e.getEntity();
             final SCBPlayer scbPlayer = playerManager.getPlayer(player);
             if (player.getHealth() - e.getDamage() <= 0) {
                 e.setCancelled(true);
-                if (scbPlayer.isInGame() && scbPlayer.currentArena != null) {
-                    scbPlayer.currentArena.onPlayerDeath(scbPlayer, null);
+                if (scbPlayer.isInGame()) {
+                    Arena.onPlayerDeath(scbPlayer, null, false);
                 }
                 player.setHealth(player.getMaxHealth());
+            }
+        }
+    }
+    @EventHandler
+    public void onPlayerKilledByPlayer(EntityDamageByEntityEvent e) {
+        if(e.getEntity() instanceof Player) {
+            final SCBPlayer player = playerManager.getPlayer((Player) e.getEntity());
+            if(e.getDamager() instanceof Player) {
+                SCBPlayer damager = playerManager.getPlayer((Player)e.getDamager());
+                if(player.getPlayer().getHealth() - e.getDamage() <= 0) {
+                    e.setCancelled(true);
+                    Arena.onPlayerDeath(player, damager, true);
+                    player.getPlayer().setHealth(20);
+                }
+            } else {
+                if(player.getPlayer().getHealth() - e.getDamage() <= 0) {
+                    e.setCancelled(true);
+                    Arena.onPlayerDeath(player, null, false);
+                    player.getPlayer().setHealth(20);
+                }
             }
         }
     }

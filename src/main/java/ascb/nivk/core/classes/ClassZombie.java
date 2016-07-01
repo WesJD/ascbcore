@@ -12,9 +12,6 @@ import org.bukkit.potion.PotionEffect;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by Nivk on 2016. 07. 01..
- */
 public class ClassZombie extends PlayerClass {
 
     @Override
@@ -43,7 +40,7 @@ public class ClassZombie extends PlayerClass {
     public ItemStack getHelmet() {
         ItemStack helmet = new ItemStack(Material.LEATHER_HELMET, 1);
         LeatherArmorMeta meta = (LeatherArmorMeta) helmet.getItemMeta();
-        meta.setColor(Color.GREEN);
+        meta.setColor(Color.TEAL);
         helmet.setItemMeta(meta);
         return helmet;
     }
@@ -52,7 +49,7 @@ public class ClassZombie extends PlayerClass {
     public ItemStack getChestplate() {
         ItemStack chestplate = new ItemStack(Material.LEATHER_CHESTPLATE, 1);
         LeatherArmorMeta meta = (LeatherArmorMeta) chestplate.getItemMeta();
-        meta.setColor(Color.GREEN);
+        meta.setColor(Color.TEAL);
         chestplate.setItemMeta(meta);
         return chestplate;
     }
@@ -61,7 +58,7 @@ public class ClassZombie extends PlayerClass {
     public ItemStack getLeggings() {
         ItemStack leggings = new ItemStack(Material.LEATHER_LEGGINGS, 1);
         LeatherArmorMeta meta = (LeatherArmorMeta) leggings.getItemMeta();
-        meta.setColor(Color.GREEN);
+        meta.setColor(Color.TEAL);
         leggings.setItemMeta(meta);
         return leggings;
     }
@@ -70,7 +67,8 @@ public class ClassZombie extends PlayerClass {
     public ItemStack getBoots() {
         ItemStack boots = new ItemStack(Material.LEATHER_BOOTS, 1);
         LeatherArmorMeta meta = (LeatherArmorMeta) boots.getItemMeta();
-        meta.setColor(Color.GREEN);
+        meta.setColor(Color.TEAL);
+        meta.addEnchant(Enchantment.PROTECTION_FALL, 4, true);
         boots.setItemMeta(meta);
         return boots;
     }

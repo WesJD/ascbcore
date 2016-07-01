@@ -109,7 +109,7 @@ public class SCBPlayer {
 	}
 
 	public boolean isInGame() {
-		return inGame;
+		return inGame || currentArena != null;
 	}
 
 	public void setInGame(boolean inGame) {
