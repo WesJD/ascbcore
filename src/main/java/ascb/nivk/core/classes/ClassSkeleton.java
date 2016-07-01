@@ -1,8 +1,7 @@
 package ascb.nivk.core.classes;
 
-import ascb.nivk.core.AbstractSCBClass;
-import ascb.nivk.core.Main;
 import ascb.nivk.core.player.SCBPlayer;
+import org.bukkit.ChatColor;
 import org.bukkit.Color;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
@@ -14,28 +13,21 @@ import org.bukkit.inventory.meta.LeatherArmorMeta;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by Nivk on 2016. 07. 01..
- */
 public class ClassSkeleton extends AbstractSCBClass {
-    @Override
-    public float getJumpPower() {
-        return 1.2f;
-    }
 
     @Override
     public String getName() {
-        return "Classes.SKELETON";
+        return "skeleton";
     }
 
     @Override
-    public String getDisplayname() {
-        return Main.tacc('&', "&7[&fSkeleton&f]&7");
+    public ChatColor getColor() {
+        return ChatColor.WHITE;
     }
 
     @Override
-    public int getLevel() {
-        return AbstractSCBClass.DEFAULT;
+    public float getJumpPower() {
+        return 1.2f;
     }
 
     @Override
@@ -74,5 +66,10 @@ public class ClassSkeleton extends AbstractSCBClass {
         bukkitPlayer.getInventory().setChestplate(chestplate);
         bukkitPlayer.getInventory().setLeggings(leggings);
         bukkitPlayer.getInventory().setBoots(boots);
+    }
+
+    @Override
+    public ClassType getType() {
+        return ClassType.DEFAULT;
     }
 }

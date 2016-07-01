@@ -1,8 +1,7 @@
 package ascb.nivk.core.classes;
 
-import ascb.nivk.core.AbstractSCBClass;
-import ascb.nivk.core.Main;
 import ascb.nivk.core.player.SCBPlayer;
+import org.bukkit.ChatColor;
 import org.bukkit.Color;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
@@ -17,23 +16,18 @@ import java.util.List;
 public class ClassZombie extends AbstractSCBClass {
 
     @Override
-    public float getJumpPower() {
-        return 1.2f;
-    }
-
-    @Override
     public String getName() {
         return "Classes.ZOMBIE";
     }
 
     @Override
-    public String getDisplayname() {
-        return Main.tacc('&', "&7[&3Zombie&7]");
+    public ChatColor getColor() {
+        return ChatColor.GREEN;
     }
 
     @Override
-    public int getLevel() {
-        return AbstractSCBClass.DEFAULT;
+    public float getJumpPower() {
+        return 1.2F;
     }
 
     @Override
@@ -68,4 +62,10 @@ public class ClassZombie extends AbstractSCBClass {
         bukkitPlayer.getInventory().setLeggings(leggings);
         bukkitPlayer.getInventory().setBoots(boots);
     }
+
+    @Override
+    public ClassType getType() {
+        return ClassType.DEFAULT;
+    }
+
 }

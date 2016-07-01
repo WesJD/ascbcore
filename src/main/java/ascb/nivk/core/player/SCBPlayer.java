@@ -3,12 +3,11 @@ package ascb.nivk.core.player;
 import java.util.UUID;
 
 import ascb.nivk.core.Main;
-import ascb.nivk.core.AbstractSCBClass;
+import ascb.nivk.core.classes.AbstractSCBClass;
 import ascb.nivk.core.Ranks;
 import ascb.nivk.core.arena.Arena;
 import com.nametagedit.plugin.NametagEdit;
 import org.bukkit.ChatColor;
-import ascb.nivk.core.classes.ClassRandom;
 import org.bukkit.entity.Player;
 
 public class SCBPlayer {
