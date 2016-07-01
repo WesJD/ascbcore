@@ -12,6 +12,7 @@ import ascb.nivk.core.classes.ClassSkeleton;
 import ascb.nivk.core.classes.ClassZombie;
 import ascb.nivk.core.player.PlayerManager;
 import ascb.nivk.core.player.SCBPlayer;
+import ascb.nivk.core.util.InstanceManager;
 import net.milkbowl.vault.permission.Permission;
 import org.bukkit.BanList.Type;
 import org.bukkit.Bukkit;
@@ -48,7 +49,8 @@ public class Main extends JavaPlugin implements Listener {
 
     private static Main main;
     private final PlayerManager playerManager = new PlayerManager();
-    private final ArenaManager arenaManager = new ArenaManager();
+    private final InstanceManager<Arena> arenaManager = new InstanceManager<>("ascb.nivk.core.arena.impl");
+    private final InstanceManager<AbstractSCBClass> classManager = new InstanceManager<>("ascb.nivk.core.classes");
 
     private Location lobbySpawn = new Location(Bukkit.getWorld(LOBBY_WORLD), 0, 50, 0);
     private Permission perms;
@@ -345,6 +347,14 @@ public class Main extends JavaPlugin implements Listener {
 
     public Location getLobbySpawn() {
         return lobbySpawn;
+    }
+
+    public InstanceManager<Arena> getArenaManager() {
+        return arenaManager;
+    }
+
+    public InstanceManager<AbstractSCBClass> getClassManager() {
+        return classManager;
     }
 
     public PlayerManager getPlayerManager() {

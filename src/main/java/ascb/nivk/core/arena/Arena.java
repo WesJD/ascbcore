@@ -1,6 +1,7 @@
 package ascb.nivk.core.arena;
 
 import ascb.nivk.core.Main;
+import ascb.nivk.core.classes.AbstractSCBClass;
 import ascb.nivk.core.player.SCBPlayer;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -28,7 +29,11 @@ public abstract class Arena {
         getSpawnpoints().forEach(loc -> players.get(cur[0]++).getPlayer().teleport(loc));
 
         players.forEach(player -> {
+            final AbstractSCBClass scbClass = player.getAbstractSCBClass();
+            if(scbClass != null) scbClass.apply(player);
+            else {
 
+            }
         });
 
         //TODO - Start the game

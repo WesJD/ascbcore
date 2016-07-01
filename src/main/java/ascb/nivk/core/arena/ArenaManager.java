@@ -7,26 +7,6 @@ import java.util.List;
 
 public class ArenaManager {
 
-    private final List<Arena> arenas = new ArrayList<>();
-
-    public ArenaManager() {
-        new Reflections("ascb.nivk.core").getSubTypesOf(Arena.class).forEach(clazz -> {
-            try {
-                arenas.add(clazz.newInstance());
-            } catch (InstantiationException | IllegalAccessException e) {
-                e.printStackTrace();
-            }
-        });
-    }
-
-    public Arena getArena(Class<? extends Arena> clazz) {
-        return arenas.stream().filter(arena -> arena.getClass().equals(clazz)).findFirst().orElse(null);
-    }
-
-    public Arena getArena(String name) {
-        return arenas.stream().filter(arena -> arena.getName().equals(name)).findFirst().orElse(null);
-    }
-
 /*    public void join(SCBPlayer player) {
         Player bukkitPlayer = player.getPlayer();
         if(player.isInGame() && !player.currentArena.getName().equalsIgnoreCase(arena.getName())) {
