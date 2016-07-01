@@ -43,17 +43,17 @@ public class ClassZombie extends AbstractSCBClass {
         ItemStack chestplate = new ItemStack(Material.LEATHER_CHESTPLATE, 1);
         LeatherArmorMeta meta2 = (LeatherArmorMeta) chestplate.getItemMeta();
         meta2.setColor(Color.TEAL);
-        chestplate.setItemMeta(meta);
+        chestplate.setItemMeta(meta2);
         ItemStack leggings = new ItemStack(Material.LEATHER_LEGGINGS, 1);
         LeatherArmorMeta meta3 = (LeatherArmorMeta) leggings.getItemMeta();
         meta3.setColor(Color.BLUE);
-        leggings.setItemMeta(meta);
+        leggings.setItemMeta(meta3);
         ItemStack boots = new ItemStack(Material.LEATHER_BOOTS, 1);
         LeatherArmorMeta meta4 = (LeatherArmorMeta) boots.getItemMeta();
         meta4.setColor(Color.RED);
         meta4.addEnchant(Enchantment.PROTECTION_FALL, 10, true);
         meta4.addEnchant(Enchantment.PROTECTION_ENVIRONMENTAL, 4, true);
-        boots.setItemMeta(meta);
+        boots.setItemMeta(meta4);
         Player bukkitPlayer = player.getPlayer();
 
         items.forEach(item -> bukkitPlayer.getInventory().addItem(item));

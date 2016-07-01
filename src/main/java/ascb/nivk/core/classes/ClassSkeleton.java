@@ -52,13 +52,13 @@ public class ClassSkeleton extends AbstractSCBClass {
         ItemStack leggings = new ItemStack(Material.LEATHER_LEGGINGS);
         LeatherArmorMeta meta2 = (LeatherArmorMeta)leggings.getItemMeta();
         meta2.setColor(Color.GRAY);
-        leggings.setItemMeta(meta);
+        leggings.setItemMeta(meta2);
         ItemStack boots = new ItemStack(Material.LEATHER_BOOTS);
         LeatherArmorMeta meta3 = (LeatherArmorMeta)boots.getItemMeta();
         meta3.setColor(Color.GRAY);
         meta3.addEnchant(Enchantment.PROTECTION_FALL, 10, true);
         meta3.addEnchant(Enchantment.PROTECTION_ENVIRONMENTAL, 4, true);
-        boots.setItemMeta(meta);
+        boots.setItemMeta(meta3);
 
         Player bukkitPlayer = player.getPlayer();
         items.forEach(item -> bukkitPlayer.getInventory().addItem(item));
