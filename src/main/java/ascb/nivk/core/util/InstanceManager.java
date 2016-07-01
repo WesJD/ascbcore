@@ -23,7 +23,7 @@ public class InstanceManager<T> {
         });
     }
 
-    public T getAbstractSCBClass(Class<? extends T> clazz) {
+    public T getByClass(Class<? extends T> clazz) {
         return instances.stream().filter(AbstractSCBClass -> clazz.getClass().equals(clazz)).findFirst().orElse(null);
     }
 
