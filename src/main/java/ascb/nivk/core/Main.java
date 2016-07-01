@@ -135,7 +135,7 @@ public class Main extends JavaPlugin implements Listener {
                 sender.sendMessage("INVALID!");
                 return true;
             }
-            testarena.onPlayerJoin(p);
+            //testarena.onPlayerJoin(p);
             sender.sendMessage("UUID: " + p.getUuid() + " Class: " + p.getPlayerClass().getName() + " Is In Game: " + p.isInGame() + " Rank: " + p.getRank().getName());
         }
 
