@@ -15,10 +15,7 @@ public abstract class AbstractSCBClass {
 		return getColor() + getName();
 	}
 
-	enum ClassType {
-
+	public enum ClassType {
 		DEFAULT, VIP;
-
 	}
-
 }

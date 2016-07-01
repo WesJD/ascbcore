@@ -5,9 +5,6 @@ import ascb.nivk.core.Main;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by Nivk on 2016. 07. 01..
- */
 public class ArenaManager {
 
     private static ArenaManager manager = null;
@@ -34,6 +31,4 @@ public class ArenaManager {
         }
         return null;
     }
-
-
 }

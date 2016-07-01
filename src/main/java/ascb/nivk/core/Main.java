@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.logging.Level;
 
 import ascb.nivk.core.arena.Arena;
+import ascb.nivk.core.arena.ArenaManager;
 import ascb.nivk.core.arena.TestArena;
 import ascb.nivk.core.classes.AbstractSCBClass;
 import ascb.nivk.core.classes.ClassSkeleton;
@@ -55,6 +56,8 @@ public class Main extends JavaPlugin implements Listener {
 
     public List<AbstractSCBClass> classes;
 
+    private ArenaManager arenaManager;
+
     @Override
     public void onLoad() {
         main = this;
@@ -88,6 +91,8 @@ public class Main extends JavaPlugin implements Listener {
             classes = new ArrayList<>();
             classes.add(new ClassZombie());
             classes.add(new ClassSkeleton());
+
+            arenaManager = ArenaManager.get();
         } else getLogger().log(Level.SEVERE, "Unable to hook into Vault for permission.");
     }
 
@@ -249,9 +254,6 @@ public class Main extends JavaPlugin implements Listener {
             String className = "Classes." + args[0].toUpperCase();
             SCBPlayer player = playerManager.getPlayer((Player) sender);
             switch(className) {
-                case "Classes.RANDOM":
-                    player.setAbstractSCBClass(new ClassRandom());
-                    break;
                 case "Classes.ZOMBIE":
                     player.setAbstractSCBClass(new ClassZombie());
                     break;
@@ -259,7 +261,7 @@ public class Main extends JavaPlugin implements Listener {
                     player.setAbstractSCBClass(new ClassSkeleton());
                     break;
             }
-            if(player.getAbstractSCBClass().getLevel() == AbstractSCBClass.VIP && player.getRank().getLevel() == 0)
+            if(player.getAbstractSCBClass().getType() == AbstractSCBClass.ClassType.VIP && player.getRank().getLevel() == 0)
                 player.setAbstractSCBClass(new ClassZombie());
             sender.sendMessage(tacc('&', "&aSet class to &2" + player.getAbstractSCBClass().getName()));
             return true;
