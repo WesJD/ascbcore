@@ -54,12 +54,12 @@ public class SCBPlayer {
 		this.lives = 4;
 		if(p.hasPermission("ascb.vip")) {
 			this.rank = Ranks.VIP;
-		} else if(p.hasPermission("ascb.gm")) {
+		}
+		if(p.hasPermission("ascb.gm")) {
 			this.rank = Ranks.GM;
-		} else if(p.isOp()) {
+		}
+		if(p.isOp()) {
 			this.rank = Ranks.OP;
-		} else {
-			this.rank = Ranks.DEFAULT;
 		}
 		this.player = p;
 		this.main = main;

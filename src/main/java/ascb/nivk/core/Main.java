@@ -3,6 +3,8 @@ package ascb.nivk.core;
 import java.util.logging.Level;
 
 import ascb.nivk.core.arena.TestArena;
+import ascb.nivk.core.classes.ClassRandom;
+import ascb.nivk.core.classes.ClassZombie;
 import ascb.nivk.core.player.PlayerManager;
 import ascb.nivk.core.player.SCBPlayer;
 import net.milkbowl.vault.permission.Permission;
@@ -138,7 +140,7 @@ public class Main extends JavaPlugin implements Listener {
         }
 
         if (cmd.equalsIgnoreCase("giverank")) {
-            if (args[0] == null || args[1] == null) {
+            if (args[0] == "" || args[1] == "" || args.length != 2) {
                 sender.sendMessage(tacc('&', "&cInvalid arguments"));
                 return true;
             }
@@ -151,7 +153,7 @@ public class Main extends JavaPlugin implements Listener {
         }
 
         if (cmd.equalsIgnoreCase("default")) {
-            if (args[0] == null) {
+            if (args[0] == "" || args.length != 1) {
                 sender.sendMessage(tacc('&', "&cInvalid arguments"));
                 return true;
             }
@@ -172,7 +174,7 @@ public class Main extends JavaPlugin implements Listener {
         }
 
         if (cmd.equalsIgnoreCase("recalculate")) {
-            if (args[0] == null) {
+            if (args[0] == "" || args.length != 1) {
                 sender.sendMessage(tacc('&', "&cInvalid arguments"));
                 return true;
             }
@@ -218,6 +220,27 @@ public class Main extends JavaPlugin implements Listener {
             } else {
                 sender.sendMessage(ChatColor.translateAlternateColorCodes('&', "&aPlayer &e" + args[0] + "&a is not Online!"));
             }
+            return true;
+        }
+
+        if(cmd.equalsIgnoreCase("class")) {
+            if(!(sender instanceof Player))
+                return true;
+            if(args.length != 1) {
+                sender.sendMessage(tacc('&', "&cInvalid arguments"));
+                return true;
+            }
+            String className = "Classes." + args[0].toUpperCase();
+            SCBPlayer player = playerManager.getPlayer((Player) sender);
+            switch(className) {
+                case "Classes.RANDOM":
+                    player.setPlayerClass(new ClassRandom());
+                    break;
+                case "Classes.ZOMBIE":
+                    player.setPlayerClass(new ClassZombie());
+                    break;
+            }
+            sender.sendMessage(tacc('&', "&aSet class to &2" + className));
             return true;
         }
         return false;
