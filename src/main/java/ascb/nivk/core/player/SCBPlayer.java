@@ -26,6 +26,7 @@ package ascb.nivk.core.player;
 
 import java.util.UUID;
 
+import ascb.nivk.core.Main;
 import ascb.nivk.core.PlayerClass;
 import ascb.nivk.core.Ranks;
 import ascb.nivk.core.arena.Arena;
@@ -38,14 +39,16 @@ public class SCBPlayer {
 
 	private UUID uuid;
 	private PlayerClass playerClass;
-	private int lives = 4;
+	private int lives = 5;
 	private boolean inGame = false;
 	public Arena currentArena = null;
 	
 	private Ranks rank = Ranks.DEFAULT;
 	private Player player;
+
+	private Main main;
 	
-	public SCBPlayer(UUID id, Player p) {
+	public SCBPlayer(UUID id, Player p, Main main) {
 		this.uuid = id;
 		this.playerClass = new ClassRandom();
 		this.lives = 4;
@@ -59,6 +62,7 @@ public class SCBPlayer {
 			this.rank = Ranks.DEFAULT;
 		}
 		this.player = p;
+		this.main = main;
 	}
 
 	public void recalculate() {

@@ -34,7 +34,6 @@ import ascb.nivk.core.doubleJump.DoubleJump;
 import ascb.nivk.core.messages.OnJoin;
 
 public class Main extends JavaPlugin implements Listener {
-
     private static Main main;
     private final PlayerManager playerManager = new PlayerManager();
 
@@ -71,7 +70,7 @@ public class Main extends JavaPlugin implements Listener {
             lobbySpawn = new Location(Bukkit.getWorld("old_lobby"), x, y, z);
             lobbySpawn.setPitch(Float.parseFloat(lobbySpawnParts[3].replaceAll("x", "")));
             lobbySpawn.setYaw(Float.parseFloat(lobbySpawnParts[4].replaceAll("x", "")));
-            testarena = new TestArena();
+            testarena = new TestArena(this);
         } else getLogger().log(Level.SEVERE, "Unable to hook into Vault for permission.");
     }
 
@@ -89,7 +88,7 @@ public class Main extends JavaPlugin implements Listener {
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent e) {
         final Player player = e.getPlayer();
-        final SCBPlayer scbPlayer = new SCBPlayer(player.getUniqueId(), player);
+        final SCBPlayer scbPlayer = new SCBPlayer(player.getUniqueId(), player, this);
 
         playerManager.addPlayer(player, scbPlayer);
 
@@ -288,5 +287,4 @@ public class Main extends JavaPlugin implements Listener {
     public static Main get() {
         return main;
     }
-
 }
