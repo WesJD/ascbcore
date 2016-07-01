@@ -142,7 +142,7 @@ public class Main extends JavaPlugin implements Listener {
                 sender.sendMessage(ChatColor.translateAlternateColorCodes('&', "&6The ASCB Project >> &cThis server is running ASCBCore " + this.getDescription().getVersion() + " &6made by&c " + this.getDescription().getAuthors()));
                 return true;
             } else if(args.length == 1) {
-                Arena.onPlayerJoin(playerManager.getPlayer((Player)sender), testarena);
+                Arena.onPlayerJoin(playerManager.getPlayer((Player)sender), arenaManager.getArena("testarena"));
             } else {
                 Arena.giveClass(playerManager.getPlayer((Player)sender));
             }

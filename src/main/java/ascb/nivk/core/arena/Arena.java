@@ -28,14 +28,14 @@ public abstract class Arena {
 
     public static void onPlayerJoin(SCBPlayer player, Arena arena) {
         Player bukkitPlayer = player.getPlayer();
-       /*if(player.isInGame() && !player.currentArena.getName().equalsIgnoreCase(arena.getName())) {
+        if(player.isInGame() && !player.currentArena.getName().equalsIgnoreCase(arena.getName())) {
             bukkitPlayer.sendMessage(Main.tacc('&', "&c&lERROR:&r&c You are already in another game."));
             return;
         }
         if(player.isInGame() && player.currentArena.getName().equalsIgnoreCase(arena.getName())) {
             bukkitPlayer.sendMessage(Main.tacc('&', "&c&lERROR:&r&c You are already in this game"));
             return;
-        }*/
+        }
         if(arena.isInProgress()) {
             bukkitPlayer.sendMessage(Main.tacc('&', "&c&lERROR: &r&cArena is in progress"));
             return;
@@ -112,14 +112,7 @@ public abstract class Arena {
     }
 
     public static void onPlayerLeave(SCBPlayer scbPlayer) {
-        if(!scbPlayer.isInGame())
-            return;
-        checkWinner(scbPlayer.getArena());
-        scbPlayer.currentArena = null;
-        scbPlayer.setInGame(false);
-        scbPlayer.setLives(5);
-        clearInventory(scbPlayer);
-        scbPlayer.getPlayer().teleport(Main.get().getLobbySpawn());
+        ArenaManager.get().leave(scbPlayer);
     }
 
     private static void clearInventory(SCBPlayer player) {
