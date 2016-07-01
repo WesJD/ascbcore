@@ -1,46 +1,34 @@
 package ascb.nivk.core.arena;
 
-import ascb.nivk.core.Main;
-import ascb.nivk.core.player.SCBPlayer;
-import com.avaje.ebean.LogLevel;
-import com.sun.media.jfxmedia.logging.Logger;
-import org.bukkit.Material;
-import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.potion.PotionEffect;
+import org.reflections.Reflections;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class ArenaManager {
 
-    private static ArenaManager manager = null;
-    private TestArena testArena;
+    private final List<Arena> arenas = new ArrayList<>();
 
-    private List<Arena> arenas;
-
-    private ArenaManager() {
-        testArena = new TestArena(Main.get());
-        arenas = new ArrayList<>();
-        arenas.add(testArena);
+    public ArenaManager() {
+        new Reflections("ascb.nivk.core").getSubTypesOf(Arena.class).forEach(clazz -> {
+            try {
+                arenas.add(clazz.newInstance());
+            } catch (InstantiationException | IllegalAccessException e) {
+                e.printStackTrace();
+            }
+        });
     }
 
-    public static ArenaManager get() {
-        if(manager == null)
-            manager = new ArenaManager();
-        return manager;
+    public Arena getArena(Class<? extends Arena> clazz) {
+        return arenas.stream().filter(arena -> arena.getClass().equals(clazz)).findFirst().orElse(null);
     }
 
     public Arena getArena(String name) {
-        for(Arena arena : arenas) {
-            if(arena.getName().equalsIgnoreCase(name))
-                return arena;
-        }
-        return null;
+        return arenas.stream().filter(arena -> arena.getName().equals(name)).findFirst().orElse(null);
     }
 
-    public void join(SCBPlayer player) {
-        /*Player bukkitPlayer = player.getPlayer();
+/*    public void join(SCBPlayer player) {
+        Player bukkitPlayer = player.getPlayer();
         if(player.isInGame() && !player.currentArena.getName().equalsIgnoreCase(arena.getName())) {
             bukkitPlayer.sendMessage(Main.tacc('&', "&c&lERROR:&r&c You are already in another game."));
             return;
@@ -77,7 +65,7 @@ public class ArenaManager {
                 arena.setInProgress(true);
             }
         }
-        arena.getPlayers().forEach(p -> player.getPlayer().sendMessage(Main.tacc('&', "&cThere are/is &e" + arena.getPlayers().size() + "&c player(s) waiting.")));*/
+        arena.getPlayers().forEach(p -> player.getPlayer().sendMessage(Main.tacc('&', "&cThere are/is &e" + arena.getPlayers().size() + "&c player(s) waiting.")));
     }
 
     public void leave(SCBPlayer player) {
@@ -101,9 +89,9 @@ public class ArenaManager {
     }
 
     public void onPlayerDeath(SCBPlayer player, SCBPlayer attacker, boolean killedByPlayer) {
-        /*if(player.isInGame() && !player.getArena().isInProgress()) {
+        if(player.isInGame() && !player.getCurrentArena().isInProgress()) {
             player.getPlayer().sendMessage(Main.tacc('&', "&c&lERROR: &r&cThe match didn\'t even start! How did you die?"));
-            player.getPlayer().teleport(player.getArena().getLobbyLocation());
+            player.getPlayer().teleport(player.getCurrentArena().getLobbyLocation());
             return;
         }
         if(!player.isInGame()) {
@@ -115,12 +103,12 @@ public class ArenaManager {
         player.setLives(player.getLives() - 1);
         if(player.getLives() <= 0) {
             player.getPlayer().sendMessage(Main.tacc('&', "&cYou have been eliminated from the game!"));
-            player.getPlayer().teleport(player.getArena().getLobbyLocation());
+            player.getPlayer().teleport(player.getCurrentArena().getLobbyLocation());
             clearInventory(player);
         } else {
-            player.getPlayer().teleport(player.getArena().getSpawnpoints().get(random.nextInt(player.getArena().getSpawnpoints().size())));
+            player.getPlayer().teleport(player.getCurrentArena().getSpawnpoints().get(random.nextInt(player.getCurrentArena().getSpawnpoints().size())));
         }
-        player.getArena().getPlayers().forEach(scbPlayer -> {
+        player.getCurrentArena().getPlayers().forEach(scbPlayer -> {
             if(playerKilled) {
                 if(!scbPlayer.getPlayer().getName().equalsIgnoreCase(player.getPlayer().getName())) {
                     scbPlayer.getPlayer().sendMessage(Main.tacc('&', "&e" + player.getPlayer().getName() + " &cwas killed by &e" + attacker.getPlayer().getName() + "&c!"));
@@ -141,7 +129,7 @@ public class ArenaManager {
         clearInventory(player);
         if(player.getLives() > 0)
             giveClass(player);
-        checkWinner(player.getArena());*/
+        checkWinner(player.getCurrentArena());
     }
 
     private void clearInventory(SCBPlayer player) {
@@ -155,7 +143,7 @@ public class ArenaManager {
     }
 
     private void checkWinner(Arena arena) {
-        /*int ingamePlayers = 0;
+        int ingamePlayers = 0;
         for(SCBPlayer player : arena.getPlayers()) {
             if(player.getLives() >= 1)
                 ingamePlayers++;
@@ -186,6 +174,6 @@ public class ArenaManager {
             arena.getPlayers().clear();
             arena.getLives().clear();
             arena.setInProgress(false);
-        }*/
-    }
+        }
+    }*/
 }

@@ -6,7 +6,7 @@ import java.util.logging.Level;
 
 import ascb.nivk.core.arena.Arena;
 import ascb.nivk.core.arena.ArenaManager;
-import ascb.nivk.core.arena.TestArena;
+import ascb.nivk.core.arena.impl.TestArena;
 import ascb.nivk.core.classes.AbstractSCBClass;
 import ascb.nivk.core.classes.ClassSkeleton;
 import ascb.nivk.core.classes.ClassZombie;
@@ -48,6 +48,7 @@ public class Main extends JavaPlugin implements Listener {
 
     private static Main main;
     private final PlayerManager playerManager = new PlayerManager();
+    private final ArenaManager arenaManager = new ArenaManager();
 
     private Location lobbySpawn = new Location(Bukkit.getWorld(LOBBY_WORLD), 0, 50, 0);
     private Permission perms;
@@ -55,8 +56,6 @@ public class Main extends JavaPlugin implements Listener {
     public TestArena testarena;
 
     public List<AbstractSCBClass> classes;
-
-    private ArenaManager arenaManager;
 
     @Override
     public void onLoad() {
@@ -86,13 +85,11 @@ public class Main extends JavaPlugin implements Listener {
             lobbySpawn = new Location(Bukkit.getWorld(LOBBY_WORLD), x, y, z);
             lobbySpawn.setPitch(Float.parseFloat(lobbySpawnParts[3].replaceAll("x", "")));
             lobbySpawn.setYaw(Float.parseFloat(lobbySpawnParts[4].replaceAll("x", "")));
-            testarena = new TestArena(this);
+            testarena = new TestArena();
 
             classes = new ArrayList<>();
             classes.add(new ClassZombie());
             classes.add(new ClassSkeleton());
-
-            arenaManager = ArenaManager.get();
         } else getLogger().log(Level.SEVERE, "Unable to hook into Vault for permission.");
     }
 
@@ -130,7 +127,7 @@ public class Main extends JavaPlugin implements Listener {
     public void onPlayerLeave(PlayerQuitEvent e) {
         final Player player = e.getPlayer();
         final SCBPlayer scbPlayer = playerManager.getPlayer(player);
-        Arena.onPlayerLeave(scbPlayer);
+        scbPlayer.getCurrentArena().leave(scbPlayer);
         playerManager.removePlayer(player);
     }
 
@@ -138,13 +135,16 @@ public class Main extends JavaPlugin implements Listener {
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         String cmd = command.getName();
         if (cmd.equalsIgnoreCase("ascb")) {
-            if (args.length == 0) {
-                sender.sendMessage(ChatColor.translateAlternateColorCodes('&', "&6The ASCB Project >> &cThis server is running ASCBCore " + this.getDescription().getVersion() + " &6made by&c " + this.getDescription().getAuthors()));
-                return true;
-            } else if(args.length == 1) {
-                Arena.onPlayerJoin(playerManager.getPlayer((Player)sender), arenaManager.getArena("testarena"));
-            } else {
-                Arena.giveClass(playerManager.getPlayer((Player)sender));
+            if(sender instanceof Player) {
+                final SCBPlayer player = playerManager.getPlayer((Player) sender);
+                if (args.length == 0) {
+                    sender.sendMessage(ChatColor.translateAlternateColorCodes('&', "&6The ASCB Project >> &cThis server is running ASCBCore " + this.getDescription().getVersion() + " &6made by&c " + this.getDescription().getAuthors()));
+                    return true;
+                } else if(args.length == 1) player.getCurrentArena().leave(player);
+                /*    Arena.onPlayerJoin(playerManager.getPlayer((Player)sender), arenaManager.getArena("testarena"));
+                } else {
+                    Arena.giveClass(playerManager.getPlayer((Player)sender));
+                }*/
             }
         }
 
@@ -276,7 +276,8 @@ public class Main extends JavaPlugin implements Listener {
             final SCBPlayer scbPlayer = playerManager.getPlayer(player);
             if (player.getHealth() - e.getDamage() <= 0) {
                 e.setCancelled(true);
-                Arena.onPlayerDeath(scbPlayer, null, false);
+                //TODO - Handle player death
+                //Arena.onPlayerDeath(scbPlayer, null, false);
                 player.setHealth(player.getMaxHealth());
             }
         }
@@ -289,13 +290,15 @@ public class Main extends JavaPlugin implements Listener {
                 SCBPlayer damager = playerManager.getPlayer((Player)e.getDamager());
                 if(player.getPlayer().getHealth() - e.getDamage() <= 0) {
                     e.setCancelled(true);
-                    Arena.onPlayerDeath(player, damager, true);
+                    //TODO - Handle player death
+                    //Arena.onPlayerDeath(scbPlayer, damager, true);
                     player.getPlayer().setHealth(20);
                 }
             } else {
                 if(player.getPlayer().getHealth() - e.getDamage() <= 0) {
                     e.setCancelled(true);
-                    Arena.onPlayerDeath(player, null, false);
+                    //TODO - Handle player death
+                    //Arena.onPlayerDeath(scbPlayer, damager, false);
                     player.getPlayer().setHealth(20);
                 }
             }

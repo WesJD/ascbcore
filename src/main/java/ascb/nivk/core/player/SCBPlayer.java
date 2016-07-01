@@ -12,10 +12,9 @@ import org.bukkit.entity.Player;
 
 public class SCBPlayer {
 
-	private UUID uuid;
+	private final UUID uuid;
 	private AbstractSCBClass abstractSCBClass;
 	private int lives = 5;
-	private boolean inGame = false;
 	public Arena currentArena = null;
 	
 	private Ranks rank = Ranks.DEFAULT;
@@ -25,8 +24,6 @@ public class SCBPlayer {
 	
 	public SCBPlayer(UUID id, Player p, Main main) {
 		this.uuid = id;
-		this.abstractSCBClass = new ClassRandom();
-		this.lives = 4;
 		if(p.hasPermission("ascb.vip")) {
 			this.rank = Ranks.VIP;
 		}
@@ -55,8 +52,12 @@ public class SCBPlayer {
 		NametagEdit.getApi().setPrefix(p, ChatColor.translateAlternateColorCodes('&', getRank().getPrefix() + " "));
 	}
 
-	public Arena getArena() {
+	public Arena getCurrentArena() {
 		return this.currentArena;
+	}
+
+	public void setCurrentArena(Arena arena) {
+		currentArena = arena;
 	}
 
 	public Ranks getRank() {
@@ -84,14 +85,15 @@ public class SCBPlayer {
 	}
 
 	public boolean isInGame() {
-		return inGame || currentArena != null;
-	}
-
-	public void setInGame(boolean inGame) {
-		this.inGame = inGame;
+		return currentArena != null;
 	}
 
 	public Player getPlayer() {
 		return player;
 	}
+
+	public void message(String message) {
+		player.sendMessage(message);
+	}
+
 }

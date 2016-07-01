@@ -16,6 +16,7 @@ public abstract class AbstractSCBClass {
 	}
 
 	public enum ClassType {
-		DEFAULT, VIP;
+		DEFAULT, VIP
 	}
+
 }
