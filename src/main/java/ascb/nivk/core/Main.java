@@ -6,7 +6,7 @@ import java.util.logging.Level;
 
 import ascb.nivk.core.arena.Arena;
 import ascb.nivk.core.arena.TestArena;
-import ascb.nivk.core.classes.ClassRandom;
+import ascb.nivk.core.classes.AbstractSCBClass;
 import ascb.nivk.core.classes.ClassSkeleton;
 import ascb.nivk.core.classes.ClassZombie;
 import ascb.nivk.core.player.PlayerManager;
