@@ -27,3 +27,5 @@ commands:
     permission-message: &c You don't have enough permissions to run this command! Contact one of our Admins if you believe this is an error.
   recalculate:
     description: Recalculate a player
+  class:
+    description: Choose a class

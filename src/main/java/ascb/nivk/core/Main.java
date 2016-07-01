@@ -1,8 +1,14 @@
 package ascb.nivk.core;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 
+import ascb.nivk.core.arena.Arena;
 import ascb.nivk.core.arena.TestArena;
+import ascb.nivk.core.classes.ClassRandom;
+import ascb.nivk.core.classes.ClassSkeleton;
+import ascb.nivk.core.classes.ClassZombie;
 import ascb.nivk.core.player.PlayerManager;
 import ascb.nivk.core.player.SCBPlayer;
 import net.milkbowl.vault.permission.Permission;
@@ -17,6 +23,7 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
@@ -34,13 +41,19 @@ import ascb.nivk.core.doubleJump.DoubleJump;
 import ascb.nivk.core.messages.OnJoin;
 
 public class Main extends JavaPlugin implements Listener {
+
+    public static final String LOBBY_WORLD = "old_lobby";
+    public static final String ARENA_WORLD = "old_lobby";
+
     private static Main main;
     private final PlayerManager playerManager = new PlayerManager();
 
-    private Location lobbySpawn = new Location(Bukkit.getWorld("old_lobby"), 0, 50, 0);
+    private Location lobbySpawn = new Location(Bukkit.getWorld(LOBBY_WORLD), 0, 50, 0);
     private Permission perms;
     private BukkitTask announcer;
-    private TestArena testarena;
+    public TestArena testarena;
+
+    public List<AbstractSCBClass> classes;
 
     @Override
     public void onLoad() {
@@ -67,10 +80,14 @@ public class Main extends JavaPlugin implements Listener {
             double x = Double.parseDouble(lobbySpawnParts[0].replaceAll("x", ""));
             double y = Double.parseDouble(lobbySpawnParts[1].replaceAll("x", ""));
             double z = Double.parseDouble(lobbySpawnParts[2].replaceAll("x", ""));
-            lobbySpawn = new Location(Bukkit.getWorld("old_lobby"), x, y, z);
+            lobbySpawn = new Location(Bukkit.getWorld(LOBBY_WORLD), x, y, z);
             lobbySpawn.setPitch(Float.parseFloat(lobbySpawnParts[3].replaceAll("x", "")));
             lobbySpawn.setYaw(Float.parseFloat(lobbySpawnParts[4].replaceAll("x", "")));
             testarena = new TestArena(this);
+
+            classes = new ArrayList<>();
+            classes.add(new ClassZombie());
+            classes.add(new ClassSkeleton());
         } else getLogger().log(Level.SEVERE, "Unable to hook into Vault for permission.");
     }
 
@@ -108,10 +125,8 @@ public class Main extends JavaPlugin implements Listener {
     public void onPlayerLeave(PlayerQuitEvent e) {
         final Player player = e.getPlayer();
         final SCBPlayer scbPlayer = playerManager.getPlayer(player);
-        scbPlayer.currentArena.onPlayerLeave(scbPlayer);
+        Arena.onPlayerLeave(scbPlayer);
         playerManager.removePlayer(player);
-
-        //getServer().getLogger().info("SCB Player left! UUID: " + p2.getUuid() + " Array Size: " + players.size());
     }
 
     @Override
@@ -121,6 +136,10 @@ public class Main extends JavaPlugin implements Listener {
             if (args.length == 0) {
                 sender.sendMessage(ChatColor.translateAlternateColorCodes('&', "&6The ASCB Project >> &cThis server is running ASCBCore " + this.getDescription().getVersion() + " &6made by&c " + this.getDescription().getAuthors()));
                 return true;
+            } else if(args.length == 1) {
+                Arena.onPlayerJoin(playerManager.getPlayer((Player)sender), testarena);
+            } else {
+                Arena.giveClass(playerManager.getPlayer((Player)sender));
             }
         }
 
@@ -133,12 +152,11 @@ public class Main extends JavaPlugin implements Listener {
                 sender.sendMessage("INVALID!");
                 return true;
             }
-            testarena.onPlayerJoin(p);
-            sender.sendMessage("UUID: " + p.getUuid() + " Class: " + p.getPlayerClass().getName() + " Is In Game: " + p.isInGame() + " Rank: " + p.getRank().getName());
+            sender.sendMessage("UUID: " + p.getUuid() + " Class: " + p.getAbstractSCBClass().getName() + " Is In Game: " + p.isInGame() + " Rank: " + p.getRank().getName());
         }
 
         if (cmd.equalsIgnoreCase("giverank")) {
-            if (args[0] == null || args[1] == null) {
+            if (args[0] == "" || args[1] == "" || args.length != 2) {
                 sender.sendMessage(tacc('&', "&cInvalid arguments"));
                 return true;
             }
@@ -151,7 +169,7 @@ public class Main extends JavaPlugin implements Listener {
         }
 
         if (cmd.equalsIgnoreCase("default")) {
-            if (args[0] == null) {
+            if (args[0] == "" || args.length != 1) {
                 sender.sendMessage(tacc('&', "&cInvalid arguments"));
                 return true;
             }
@@ -172,7 +190,7 @@ public class Main extends JavaPlugin implements Listener {
         }
 
         if (cmd.equalsIgnoreCase("recalculate")) {
-            if (args[0] == null) {
+            if (args[0] == "" || args.length != 1) {
                 sender.sendMessage(tacc('&', "&cInvalid arguments"));
                 return true;
             }
@@ -220,20 +238,64 @@ public class Main extends JavaPlugin implements Listener {
             }
             return true;
         }
+
+        if(cmd.equalsIgnoreCase("class")) {
+            if(!(sender instanceof Player))
+                return true;
+            if(args.length != 1) {
+                sender.sendMessage(tacc('&', "&cInvalid arguments"));
+                return true;
+            }
+            String className = "Classes." + args[0].toUpperCase();
+            SCBPlayer player = playerManager.getPlayer((Player) sender);
+            switch(className) {
+                case "Classes.RANDOM":
+                    player.setAbstractSCBClass(new ClassRandom());
+                    break;
+                case "Classes.ZOMBIE":
+                    player.setAbstractSCBClass(new ClassZombie());
+                    break;
+                case "Classes.SKELETON":
+                    player.setAbstractSCBClass(new ClassSkeleton());
+                    break;
+            }
+            if(player.getAbstractSCBClass().getLevel() == AbstractSCBClass.VIP && player.getRank().getLevel() == 0)
+                player.setAbstractSCBClass(new ClassZombie());
+            sender.sendMessage(tacc('&', "&aSet class to &2" + player.getAbstractSCBClass().getName()));
+            return true;
+        }
         return false;
     }
 
     @EventHandler
     public void onPlayerDeath(EntityDamageEvent e) {
-        if (e.getEntity() instanceof Player) {
+        if (e.getEntity() instanceof Player && e.getCause() != EntityDamageEvent.DamageCause.ENTITY_ATTACK) {
             final Player player = (Player) e.getEntity();
             final SCBPlayer scbPlayer = playerManager.getPlayer(player);
             if (player.getHealth() - e.getDamage() <= 0) {
                 e.setCancelled(true);
-                if (scbPlayer.isInGame() && scbPlayer.currentArena != null) {
-                    scbPlayer.currentArena.onPlayerDeath(scbPlayer, null);
-                }
+                Arena.onPlayerDeath(scbPlayer, null, false);
                 player.setHealth(player.getMaxHealth());
+            }
+        }
+    }
+    @EventHandler
+    public void onPlayerKilledByPlayer(EntityDamageByEntityEvent e) {
+        if(e.getEntity() instanceof Player) {
+            final SCBPlayer player = playerManager.getPlayer((Player) e.getEntity());
+            if(e.getDamager() instanceof Player) {
+                SCBPlayer damager = playerManager.getPlayer((Player)e.getDamager());
+                if(player.getPlayer().getHealth() - e.getDamage() <= 0) {
+                    e.setCancelled(true);
+                    Arena.onPlayerDeath(player, damager, true);
+                    player.getPlayer().setHealth(20);
+                }
+            } else {
+                if(player.getPlayer().getHealth() - e.getDamage() <= 0) {
+                    e.setCancelled(true);
+                    Arena.onPlayerDeath(player, null, false);
+                    player.getPlayer().setHealth(20);
+                }
             }
         }
     }

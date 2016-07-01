@@ -3,7 +3,7 @@ package ascb.nivk.core;
 public enum Ranks {
 
 	DEFAULT("DEFAULT", "&7"),
-	VIP("VIP", "&f[&6VIP&f]&7"),
+	VIP("VIP", "&f[&6VIP&f]&f"),
 	GM("GM", "&f[&bGM&f]&f"),
 	OP("OP", "&f[&cOp&f]&f");
 	
