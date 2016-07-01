@@ -4,6 +4,8 @@ import org.reflections.Reflections;
 
 import java.lang.reflect.ParameterizedType;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 public class InstanceManager<T> {
@@ -23,6 +25,10 @@ public class InstanceManager<T> {
 
     public T getAbstractSCBClass(Class<? extends T> clazz) {
         return instances.stream().filter(AbstractSCBClass -> clazz.getClass().equals(clazz)).findFirst().orElse(null);
+    }
+
+    public Collection<T> getAll() {
+        return Collections.unmodifiableCollection(instances);
     }
 
 }
