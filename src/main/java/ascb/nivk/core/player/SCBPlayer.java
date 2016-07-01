@@ -3,7 +3,7 @@ package ascb.nivk.core.player;
 import java.util.UUID;
 
 import ascb.nivk.core.Main;
-import ascb.nivk.core.PlayerClass;
+import ascb.nivk.core.AbstractSCBClass;
 import ascb.nivk.core.Ranks;
 import ascb.nivk.core.arena.Arena;
 import com.nametagedit.plugin.NametagEdit;
@@ -14,7 +14,7 @@ import org.bukkit.entity.Player;
 public class SCBPlayer {
 
 	private UUID uuid;
-	private PlayerClass playerClass;
+	private AbstractSCBClass abstractSCBClass;
 	private int lives = 5;
 	private boolean inGame = false;
 	public Arena currentArena = null;
@@ -26,7 +26,7 @@ public class SCBPlayer {
 	
 	public SCBPlayer(UUID id, Player p, Main main) {
 		this.uuid = id;
-		this.playerClass = new ClassRandom();
+		this.abstractSCBClass = new ClassRandom();
 		this.lives = 4;
 		if(p.hasPermission("ascb.vip")) {
 			this.rank = Ranks.VIP;
@@ -64,12 +64,12 @@ public class SCBPlayer {
 		return rank;
 	}
 
-	public PlayerClass getPlayerClass() {
-		return playerClass;
+	public AbstractSCBClass getAbstractSCBClass() {
+		return abstractSCBClass;
 	}
 
-	public void setPlayerClass(PlayerClass playerClass) {
-		this.playerClass = playerClass;
+	public void setAbstractSCBClass(AbstractSCBClass abstractSCBClass) {
+		this.abstractSCBClass = abstractSCBClass;
 	}
 
 	public int getLives() {

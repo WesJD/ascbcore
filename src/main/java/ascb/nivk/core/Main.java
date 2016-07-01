@@ -53,7 +53,7 @@ public class Main extends JavaPlugin implements Listener {
     private BukkitTask announcer;
     public TestArena testarena;
 
-    public List<PlayerClass> classes;
+    public List<AbstractSCBClass> classes;
 
     @Override
     public void onLoad() {
@@ -138,6 +138,8 @@ public class Main extends JavaPlugin implements Listener {
                 return true;
             } else if(args.length == 1) {
                 Arena.onPlayerJoin(playerManager.getPlayer((Player)sender), testarena);
+            } else {
+                Arena.giveClass(playerManager.getPlayer((Player)sender));
             }
         }
 
@@ -150,7 +152,7 @@ public class Main extends JavaPlugin implements Listener {
                 sender.sendMessage("INVALID!");
                 return true;
             }
-            sender.sendMessage("UUID: " + p.getUuid() + " Class: " + p.getPlayerClass().getName() + " Is In Game: " + p.isInGame() + " Rank: " + p.getRank().getName());
+            sender.sendMessage("UUID: " + p.getUuid() + " Class: " + p.getAbstractSCBClass().getName() + " Is In Game: " + p.isInGame() + " Rank: " + p.getRank().getName());
         }
 
         if (cmd.equalsIgnoreCase("giverank")) {
@@ -248,16 +250,18 @@ public class Main extends JavaPlugin implements Listener {
             SCBPlayer player = playerManager.getPlayer((Player) sender);
             switch(className) {
                 case "Classes.RANDOM":
-                    player.setPlayerClass(new ClassRandom());
+                    player.setAbstractSCBClass(new ClassRandom());
                     break;
                 case "Classes.ZOMBIE":
-                    player.setPlayerClass(new ClassZombie());
+                    player.setAbstractSCBClass(new ClassZombie());
                     break;
                 case "Classes.SKELETON":
-                    player.setPlayerClass(new ClassSkeleton());
+                    player.setAbstractSCBClass(new ClassSkeleton());
                     break;
             }
-            sender.sendMessage(tacc('&', "&aSet class to &2" + className));
+            if(player.getAbstractSCBClass().getLevel() == AbstractSCBClass.VIP && player.getRank().getLevel() == 0)
+                player.setAbstractSCBClass(new ClassZombie());
+            sender.sendMessage(tacc('&', "&aSet class to &2" + player.getAbstractSCBClass().getName()));
             return true;
         }
         return false;

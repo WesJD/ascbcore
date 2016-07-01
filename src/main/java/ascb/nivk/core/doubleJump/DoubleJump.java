@@ -3,7 +3,6 @@ package ascb.nivk.core.doubleJump;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.sun.media.jfxmedia.logging.Logger;
 import org.bukkit.Effect;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
@@ -45,7 +44,7 @@ public class DoubleJump implements Listener {
 
 		player.setAllowFlight(true);
 		player.setFlying(true);
-		player.setVelocity(new Vector(0, (scbPlayer.isInGame() ? scbPlayer.getPlayerClass().getJumpPower() : 1.6f), 0));
+		player.setVelocity(new Vector(0, (scbPlayer.isInGame() ? scbPlayer.getAbstractSCBClass().getJumpPower() : 1.6f), 0));
 		player.getWorld().playEffect(player.getLocation(), Effect.PARTICLE_SMOKE, 0);
 
 		disallowed.put(player, System.currentTimeMillis());

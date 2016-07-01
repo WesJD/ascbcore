@@ -1,10 +1,7 @@
 package ascb.nivk.core.arena;
 
 import ascb.nivk.core.Main;
-import ascb.nivk.core.PlayerClass;
 import ascb.nivk.core.player.SCBPlayer;
-import com.comphenix.protocol.PacketType;
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -60,8 +57,8 @@ public abstract class Arena {
                 i++;
                 p.getPlayer().sendMessage(Main.tacc('&', "&aThe game is &ostarting"));
                 clearInventory(p);
-                if(p.getPlayerClass().getName().equalsIgnoreCase("Classes.RANDOM")) {
-                    p.setPlayerClass(Main.get().classes.get(random.nextInt(Main.get().classes.size())));
+                if(p.getAbstractSCBClass().getName().equalsIgnoreCase("Classes.RANDOM")) {
+                    p.setAbstractSCBClass(Main.get().classes.get(random.nextInt(Main.get().classes.size())));
                 }
                 giveClass(p);
                 arena.setInProgress(true);
@@ -135,20 +132,8 @@ public abstract class Arena {
             player.getPlayer().removePotionEffect(eff.getType());
     }
 
-    private static void giveClass(SCBPlayer player) {
-        PlayerClass playerClass = player.getPlayerClass();
-        List<ItemStack> items = playerClass.getItems();
-        for(ItemStack item : items) {
-            Player p = player.getPlayer();
-            p.getInventory().addItem(item);
-        }
-        List<PotionEffect> effects = playerClass.potionEffects();
-        Player p = player.getPlayer();
-        p.addPotionEffects(effects);
-        p.getInventory().setHelmet(playerClass.getHelmet());
-        p.getInventory().setChestplate(playerClass.getChestplate());
-        p.getInventory().setLeggings(playerClass.getLeggings());
-        p.getInventory().setBoots(playerClass.getBoots());
+    public static void giveClass(SCBPlayer player) {
+        player.getAbstractSCBClass().apply(player);
     }
 
     private static void checkWinner(Arena arena) {
