@@ -1,10 +1,13 @@
 package ascb.nivk.core;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 
 import ascb.nivk.core.arena.Arena;
 import ascb.nivk.core.arena.TestArena;
 import ascb.nivk.core.classes.ClassRandom;
+import ascb.nivk.core.classes.ClassSkeleton;
 import ascb.nivk.core.classes.ClassZombie;
 import ascb.nivk.core.player.PlayerManager;
 import ascb.nivk.core.player.SCBPlayer;
@@ -38,13 +41,19 @@ import ascb.nivk.core.doubleJump.DoubleJump;
 import ascb.nivk.core.messages.OnJoin;
 
 public class Main extends JavaPlugin implements Listener {
+
+    public static final String LOBBY_WORLD = "old_lobby";
+    public static final String ARENA_WORLD = "old_lobby";
+
     private static Main main;
     private final PlayerManager playerManager = new PlayerManager();
 
-    private Location lobbySpawn = new Location(Bukkit.getWorld("old_lobby"), 0, 50, 0);
+    private Location lobbySpawn = new Location(Bukkit.getWorld(LOBBY_WORLD), 0, 50, 0);
     private Permission perms;
     private BukkitTask announcer;
-    private TestArena testarena;
+    public TestArena testarena;
+
+    public List<PlayerClass> classes;
 
     @Override
     public void onLoad() {
@@ -71,10 +80,14 @@ public class Main extends JavaPlugin implements Listener {
             double x = Double.parseDouble(lobbySpawnParts[0].replaceAll("x", ""));
             double y = Double.parseDouble(lobbySpawnParts[1].replaceAll("x", ""));
             double z = Double.parseDouble(lobbySpawnParts[2].replaceAll("x", ""));
-            lobbySpawn = new Location(Bukkit.getWorld("old_lobby"), x, y, z);
+            lobbySpawn = new Location(Bukkit.getWorld(LOBBY_WORLD), x, y, z);
             lobbySpawn.setPitch(Float.parseFloat(lobbySpawnParts[3].replaceAll("x", "")));
             lobbySpawn.setYaw(Float.parseFloat(lobbySpawnParts[4].replaceAll("x", "")));
             testarena = new TestArena(this);
+
+            classes = new ArrayList<>();
+            classes.add(new ClassZombie());
+            classes.add(new ClassSkeleton());
         } else getLogger().log(Level.SEVERE, "Unable to hook into Vault for permission.");
     }
 
@@ -123,8 +136,8 @@ public class Main extends JavaPlugin implements Listener {
             if (args.length == 0) {
                 sender.sendMessage(ChatColor.translateAlternateColorCodes('&', "&6The ASCB Project >> &cThis server is running ASCBCore " + this.getDescription().getVersion() + " &6made by&c " + this.getDescription().getAuthors()));
                 return true;
-            } else {
-                Arena.onPlayerJoin(playerManager.getPlayer((Player)sender), new TestArena(this));
+            } else if(args.length == 1) {
+                Arena.onPlayerJoin(playerManager.getPlayer((Player)sender), testarena);
             }
         }
 
@@ -137,7 +150,6 @@ public class Main extends JavaPlugin implements Listener {
                 sender.sendMessage("INVALID!");
                 return true;
             }
-            //testarena.onPlayerJoin(p);
             sender.sendMessage("UUID: " + p.getUuid() + " Class: " + p.getPlayerClass().getName() + " Is In Game: " + p.isInGame() + " Rank: " + p.getRank().getName());
         }
 
@@ -241,6 +253,9 @@ public class Main extends JavaPlugin implements Listener {
                 case "Classes.ZOMBIE":
                     player.setPlayerClass(new ClassZombie());
                     break;
+                case "Classes.SKELETON":
+                    player.setPlayerClass(new ClassSkeleton());
+                    break;
             }
             sender.sendMessage(tacc('&', "&aSet class to &2" + className));
             return true;
@@ -255,9 +270,7 @@ public class Main extends JavaPlugin implements Listener {
             final SCBPlayer scbPlayer = playerManager.getPlayer(player);
             if (player.getHealth() - e.getDamage() <= 0) {
                 e.setCancelled(true);
-                if (scbPlayer.isInGame()) {
-                    Arena.onPlayerDeath(scbPlayer, null, false);
-                }
+                Arena.onPlayerDeath(scbPlayer, null, false);
                 player.setHealth(player.getMaxHealth());
             }
         }

@@ -3,6 +3,7 @@ package ascb.nivk.core.doubleJump;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.sun.media.jfxmedia.logging.Logger;
 import org.bukkit.Effect;
 import org.bukkit.GameMode;
 import org.bukkit.Location;

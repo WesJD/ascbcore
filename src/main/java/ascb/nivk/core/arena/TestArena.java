@@ -28,11 +28,11 @@ public class TestArena extends Arena {
     private Main main;
 
     public TestArena(Main main) {
-        spawnpoints.add(new Location(Bukkit.getWorld("old_lobby"),-1.5,174,311.5));
-        spawnpoints.add(new Location(Bukkit.getWorld("old_lobby"),-3.5,174,311.5));
-        spawnpoints.add(new Location(Bukkit.getWorld("old_lobby"),-5.5,174,311.5));
-        spawnpoints.add(new Location(Bukkit.getWorld("old_lobby"),-7.5,174,311.5));
-        lobbyLocation = new Location(Bukkit.getWorld("old_lobby"), -4.5,174,316.5);
+        spawnpoints.add(new Location(Bukkit.getWorld(Main.ARENA_WORLD),-1.5,174,311.5));
+        spawnpoints.add(new Location(Bukkit.getWorld(Main.ARENA_WORLD),-3.5,174,311.5));
+        spawnpoints.add(new Location(Bukkit.getWorld(Main.ARENA_WORLD),-5.5,174,311.5));
+        spawnpoints.add(new Location(Bukkit.getWorld(Main.ARENA_WORLD),-7.5,174,311.5));
+        lobbyLocation = new Location(Bukkit.getWorld(Main.ARENA_WORLD), -4.5,174,316.5);
         random = new Random();
         this.main = main;
     }

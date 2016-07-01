@@ -60,6 +60,9 @@ public abstract class Arena {
                 i++;
                 p.getPlayer().sendMessage(Main.tacc('&', "&aThe game is &ostarting"));
                 clearInventory(p);
+                if(p.getPlayerClass().getName().equalsIgnoreCase("Classes.RANDOM")) {
+                    p.setPlayerClass(Main.get().classes.get(random.nextInt(Main.get().classes.size())));
+                }
                 giveClass(p);
                 arena.setInProgress(true);
             }
@@ -68,6 +71,16 @@ public abstract class Arena {
     }
 
     public static void onPlayerDeath(SCBPlayer player, SCBPlayer attacker, boolean playerKilled) {
+        if(player.isInGame() && !player.getArena().isInProgress()) {
+            player.getPlayer().sendMessage(Main.tacc('&', "&c&lERROR: &r&cThe match didn\'t even start! How did you die?"));
+            player.getPlayer().teleport(player.getArena().getLobbyLocation());
+            return;
+        }
+        if(!player.isInGame()) {
+            player.getPlayer().sendMessage(Main.tacc('&', "&c&lERROR: &r&cDon\'t die in the lobby!"));
+            player.getPlayer().teleport(Main.get().getLobbySpawn());
+            return;
+        }
         player.getPlayer().sendMessage(Main.tacc('&', "&cYou died"));
         player.setLives(player.getLives() - 1);
         if(player.getLives() <= 0) {
