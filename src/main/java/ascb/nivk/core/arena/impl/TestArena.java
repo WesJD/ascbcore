@@ -1,17 +1,14 @@
 package ascb.nivk.core.arena.impl;
 
 import ascb.nivk.core.Main;
-import ascb.nivk.core.arena.Arena;
-import ascb.nivk.core.player.SCBPlayer;
+import ascb.nivk.core.arena.AbstractArena;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Random;
 
-public class TestArena extends Arena {
+public class TestArena extends AbstractArena {
     private List<Location> spawnpoints = new ArrayList<Location>();
     private Location lobbyLocation;
 

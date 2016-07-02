@@ -22,12 +22,7 @@ import ascb.nivk.core.player.SCBPlayer;
 public class DoubleJump implements Listener {
 	private final long COOLDOWN_TIME = 1200;
 
-	private final Main main;
 	private final Map<Player, Long> disallowed = new HashMap<>();
-
-	public DoubleJump(Main main) {
-		this.main = main;
-	}
 
 	@EventHandler
 	public void onFlightToggle(PlayerToggleFlightEvent e) {
@@ -44,7 +39,7 @@ public class DoubleJump implements Listener {
 
 		player.setAllowFlight(true);
 		player.setFlying(true);
-		player.setVelocity(new Vector(0, (scbPlayer.isInGame() ? scbPlayer.getAbstractSCBClass().getJumpPower() : 1.6f), 0));
+		player.setVelocity(new Vector(0, (scbPlayer.isInGame() ? scbPlayer.getCurrentClass().getJumpPower() : 1.6f), 0));
 		player.getWorld().playEffect(player.getLocation(), Effect.PARTICLE_SMOKE, 0);
 
 		disallowed.put(player, System.currentTimeMillis());

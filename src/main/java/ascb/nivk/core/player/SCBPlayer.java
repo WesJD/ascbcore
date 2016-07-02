@@ -3,72 +3,59 @@ package ascb.nivk.core.player;
 import java.util.UUID;
 
 import ascb.nivk.core.Main;
+import ascb.nivk.core.arena.AbstractArena;
 import ascb.nivk.core.classes.AbstractSCBClass;
-import ascb.nivk.core.Ranks;
-import ascb.nivk.core.arena.Arena;
 import com.nametagedit.plugin.NametagEdit;
-import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
 public class SCBPlayer {
 
+	private final Player player;
 	private final UUID uuid;
+	private Rank rank;
+
+	private int lives;
+	private AbstractArena currentArena;
 	private AbstractSCBClass abstractSCBClass;
-	private int lives = 5;
-	public Arena currentArena = null;
 	
-	private Ranks rank = Ranks.DEFAULT;
-	private Player player;
+	public SCBPlayer(UUID uuid, Player player) {
+		this.uuid = uuid;
+		this.player = player;
 
-	private Main main;
-	
-	public SCBPlayer(UUID id, Player p, Main main) {
-		this.uuid = id;
-		if(p.hasPermission("ascb.vip")) {
-			this.rank = Ranks.VIP;
-		}
-		if(p.hasPermission("ascb.gm")) {
-			this.rank = Ranks.GM;
-		}
-		if(p.isOp()) {
-			this.rank = Ranks.OP;
-		}
-		this.player = p;
-		this.main = main;
+		if(player.isOp()) setRank(Rank.OP);
+		else if(player.hasPermission("ascb.gm")) setRank(Rank.GM);
+		else if(player.hasPermission("ascb.vip")) setRank(Rank.VIP);
+		else setRank(Rank.DEFAULT);
 	}
 
-	public void recalculate() {
-		Player p = getPlayer();
-		this.rank = Ranks.DEFAULT;
-		if(p.hasPermission("ascb.vip")) {
-			this.rank = Ranks.VIP;
-		}
-		if(p.hasPermission("ascb.gm")) {
-			this.rank = Ranks.GM;
-		}
-		if(p.isOp()) {
-			this.rank = Ranks.OP;
-		}
-		NametagEdit.getApi().setPrefix(p, ChatColor.translateAlternateColorCodes('&', getRank().getPrefix() + " "));
-	}
-
-	public Arena getCurrentArena() {
+	public AbstractArena getCurrentArena() {
 		return this.currentArena;
 	}
 
-	public void setCurrentArena(Arena arena) {
+	public void setCurrentArena(AbstractArena arena) {
 		currentArena = arena;
 	}
 
-	public Ranks getRank() {
+	public void setRank(Rank rank) {
+		Main.get().getPermissions().playerRemove(player, "ascb." + rank.toString().toLowerCase());
+		this.rank = rank;
+		Main.get().getPermissions().playerAdd(player, "ascb." + rank.toString().toLowerCase());
+		NametagEdit.getApi().setPrefix(player, rank.getTag());
+	}
+
+	public boolean hasRank(Rank rank) {
+		return (this.rank.compareTo(rank) >= 0);
+	}
+
+	public Rank getRank() {
 		return rank;
 	}
 
-	public AbstractSCBClass getAbstractSCBClass() {
+	public AbstractSCBClass getCurrentClass() {
 		return abstractSCBClass;
 	}
 
-	public void setAbstractSCBClass(AbstractSCBClass abstractSCBClass) {
+	public void setCurrentClass(AbstractSCBClass abstractSCBClass) {
 		this.abstractSCBClass = abstractSCBClass;
 	}
 

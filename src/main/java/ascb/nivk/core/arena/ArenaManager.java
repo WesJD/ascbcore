@@ -7,6 +7,8 @@ import java.util.List;
 
 public class ArenaManager {
 
+    //this is only here for reference and should be removed when no longer needed -wes
+
 /*    public void join(SCBPlayer player) {
         Player bukkitPlayer = player.getPlayer();
         if(player.isInGame() && !player.currentArena.getName().equalsIgnoreCase(arena.getName())) {
@@ -38,8 +40,8 @@ public class ArenaManager {
                 i++;
                 p.getPlayer().sendMessage(Main.tacc('&', "&aThe game is &ostarting"));
                 clearInventory(p);
-                if(p.getAbstractSCBClass().getName().equalsIgnoreCase("Classes.RANDOM")) {
-                    p.setAbstractSCBClass(Main.get().classes.get(random.nextInt(Main.get().classes.size())));
+                if(p.getCurrentClass().getName().equalsIgnoreCase("Classes.RANDOM")) {
+                    p.setCurrentClass(Main.get().classes.get(random.nextInt(Main.get().classes.size())));
                 }
                 giveClass(p);
                 arena.setInProgress(true);
@@ -49,8 +51,8 @@ public class ArenaManager {
     }
 
     public void leave(SCBPlayer player) {
-        Arena arena = null;
-        for(Arena a : arenas) {
+        AbstractArena arena = null;
+        for(AbstractArena a : arenas) {
             if(a.getPlayers().contains(player))
                 arena = a;
         }
@@ -122,7 +124,7 @@ public class ArenaManager {
             player.getPlayer().removePotionEffect(eff.getType());
     }
 
-    private void checkWinner(Arena arena) {
+    private void checkWinner(AbstractArena arena) {
         int ingamePlayers = 0;
         for(SCBPlayer player : arena.getPlayers()) {
             if(player.getLives() >= 1)

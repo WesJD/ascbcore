@@ -3,18 +3,27 @@ package ascb.nivk.core.arena;
 import ascb.nivk.core.Main;
 import ascb.nivk.core.classes.AbstractSCBClass;
 import ascb.nivk.core.player.SCBPlayer;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.entity.EntityDamageEvent;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
-public abstract class Arena {
+public abstract class AbstractArena implements Listener {
 
     public abstract String getName();
     public abstract List<Location> getSpawnpoints();
     public abstract Location getLobbyLocation();
+
+    public AbstractArena() {
+        Bukkit.getPluginManager().registerEvents(this, Main.get());
+    }
 
     private boolean running = false;
 
@@ -29,7 +38,7 @@ public abstract class Arena {
         getSpawnpoints().forEach(loc -> players.get(cur[0]++).getPlayer().teleport(loc));
 
         players.forEach(player -> {
-            final AbstractSCBClass scbClass = player.getAbstractSCBClass();
+            final AbstractSCBClass scbClass = player.getCurrentClass();
             if(scbClass != null) scbClass.apply(player);
             else {
 
@@ -66,11 +75,47 @@ public abstract class Arena {
 
     }
 
+    @EventHandler
+    public void onPlayerDeath(EntityDamageEvent e) {
+        if (e.getEntity() instanceof Player && e.getCause() != EntityDamageEvent.DamageCause.ENTITY_ATTACK) {
+            final Player player = (Player) e.getEntity();
+            final SCBPlayer scbPlayer = Main.get().getPlayerManager().getPlayer(player);
+            if (player.getHealth() - e.getDamage() <= 0) {
+                e.setCancelled(true);
+                //TODO - Handle player death
+                //AbstractArena.onPlayerDeath(scbPlayer, null, false);
+                player.setHealth(player.getMaxHealth());
+            }
+        }
+    }
+    @EventHandler
+    public void onPlayerKilledByPlayer(EntityDamageByEntityEvent e) {
+        if(e.getEntity() instanceof Player) {
+            final SCBPlayer player = Main.get().getPlayerManager().getPlayer((Player) e.getEntity());
+            if(e.getDamager() instanceof Player) {
+                SCBPlayer damager = Main.get().getPlayerManager().getPlayer((Player)e.getDamager());
+                if(player.getPlayer().getHealth() - e.getDamage() <= 0) {
+                    e.setCancelled(true);
+                    //TODO - Handle player death
+                    //AbstractArena.onPlayerDeath(scbPlayer, damager, true);
+                    player.getPlayer().setHealth(20);
+                }
+            } else {
+                if(player.getPlayer().getHealth() - e.getDamage() <= 0) {
+                    e.setCancelled(true);
+                    //TODO - Handle player death
+                    //AbstractArena.onPlayerDeath(scbPlayer, damager, false);
+                    player.getPlayer().setHealth(20);
+                }
+            }
+        }
+    }
+
 /*    public static final int MAX_LIVES = 5;
 
     private static Random random = new Random();
 
-    public static void onPlayerJoin(SCBPlayer player, Arena arena) {
+    public static void onPlayerJoin(SCBPlayer player, AbstractArena arena) {
         Player bukkitPlayer = player.getPlayer();
         if (player.isInGame() && !player.currentArena.getName().equalsIgnoreCase(arena.getName())) {
             bukkitPlayer.sendMessage(Main.tacc('&', "&c&lERROR:&r&c You are already in another game."));
@@ -101,8 +146,8 @@ public abstract class Arena {
                 i++;
                 p.getPlayer().sendMessage(Main.tacc('&', "&aThe game is &ostarting"));
                 clearInventory(p);
-                if (p.getAbstractSCBClass().getName().equalsIgnoreCase("Classes.RANDOM")) {
-                    p.setAbstractSCBClass(Main.get().classes.get(random.nextInt(Main.get().classes.size())));
+                if (p.getCurrentClass().getName().equalsIgnoreCase("Classes.RANDOM")) {
+                    p.setCurrentClass(Main.get().classes.get(random.nextInt(Main.get().classes.size())));
                 }
                 giveClass(p);
                 arena.setInProgress(true);
@@ -170,10 +215,10 @@ public abstract class Arena {
     }
 
     public static void giveClass(SCBPlayer player) {
-        player.getAbstractSCBClass().apply(player);
+        player.getCurrentClass().apply(player);
     }
 
-    private static void checkWinner(Arena arena) {
+    private static void checkWinner(AbstractArena arena) {
         int ingamePlayers = 0;
         for (SCBPlayer player : arena.getPlayers()) {
             if (player.getLives() >= 1)
