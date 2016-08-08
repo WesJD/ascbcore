@@ -12,9 +12,8 @@ public class InstanceManager<T> {
 
     private final List<T> instances = new ArrayList<>();
 
-    public InstanceManager(String packageSearch) {
-        new Reflections(packageSearch).getSubTypesOf((Class<T>) ((ParameterizedType) getClass()
-                .getGenericSuperclass()).getActualTypeArguments()[0]).forEach(clazz -> {
+    public InstanceManager(Class<T> superclass, String packageSearch) {
+        new Reflections(packageSearch).getSubTypesOf(superclass).forEach(clazz -> {
             try {
                 instances.add(clazz.newInstance());
             } catch (InstantiationException | IllegalAccessException e) {
@@ -24,7 +23,7 @@ public class InstanceManager<T> {
     }
 
     public T getByClass(Class<? extends T> clazz) {
-        return instances.stream().filter(AbstractSCBClass -> clazz.getClass().equals(clazz)).findFirst().orElse(null);
+        return instances.stream().filter(instance -> instance.getClass().equals(clazz)).findFirst().orElse(null);
     }
 
     public Collection<T> getAll() {

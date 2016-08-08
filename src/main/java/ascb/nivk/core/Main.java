@@ -31,8 +31,8 @@ public class Main extends JavaPlugin implements Listener {
     private static Main main;
 
     private final PlayerManager playerManager = new PlayerManager();
-    private final InstanceManager<AbstractArena> arenaManager = new InstanceManager<>("ascb.nivk.core.arena.impl");
-    private final InstanceManager<AbstractSCBClass> classManager = new InstanceManager<>("ascb.nivk.core.classes");
+    private final InstanceManager<AbstractArena> arenaManager = new InstanceManager<>(AbstractArena.class, "ascb.nivk.core.arena.impl");
+    private final InstanceManager<AbstractSCBClass> classManager = new InstanceManager<>(AbstractSCBClass.class, "ascb.nivk.core.classes");
 
     private Location lobbySpawn = new Location(Bukkit.getWorld(LOBBY_WORLD), 0, 50, 0);
     private Permission permissions;
